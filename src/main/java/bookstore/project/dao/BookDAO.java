@@ -13,8 +13,8 @@ public class BookDAO implements IBookDAO {
 
     public BookDAO() {
         this.connection = DatabaseConnection
-                .getInstance()
-                .getConnection();
+            .getInstance()
+            .getConnection();
     }
 
     @Override
@@ -46,13 +46,30 @@ public class BookDAO implements IBookDAO {
 
     @Override
     public boolean updateBook(Book book) {
-        try {
-        }
-        catch(Exception e) {
-            e.printStackTrace();
-        }
+        String query = SQL_BOX.UPDATE_BOOK;
         
-        return false;
+        try {
+            PreparedStatement statement = this.connection.prepareStatement(query);
+
+            statement.setString(1, book.getTitle());
+            statement.setString(2, book.getAuthor());
+            statement.setString(3, book.getPublisher());
+            statement.setDate(4, book.getPublicationDate());
+            statement.setString(5, book.getCategory());
+            statement.setString(6, book.getLanguage());
+            statement.setInt(7, book.getPages());
+            statement.setString(8, book.getFormat());
+            statement.setDouble(9, book.getPrice());
+            statement.setInt(10, book.getStock());
+            statement.setString(11, book.getDescription());
+            statement.setInt(12, book.getId());
+
+            int result = statement.executeUpdate();
+            return result == 1;
+        }
+        catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -73,8 +90,10 @@ public class BookDAO implements IBookDAO {
     public static void main(String[] args) {
         try {
             BookDAO bookDAO = new BookDAO();
-            Book newBook = new Book(
-                "JEE From scratch",
+            
+            Book book = new Book(
+                23,
+                "JEE From scratch v3",
                 "Mohammed amine",
                 "T. Egerton",
                 java.sql.Date.valueOf("1813-01-28"),
@@ -87,7 +106,7 @@ public class BookDAO implements IBookDAO {
                 "A classic English novel about love and society."
             );
 
-            if (bookDAO.addBook(newBook)) {
+            if (bookDAO.updateBook(book)) {
                 System.out.println("Book added successfully!");
             } else {
                 System.out.println("Failed to add book.");
