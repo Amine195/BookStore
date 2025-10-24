@@ -3,9 +3,12 @@ package bookstore.project.dao;
 import bookstore.project.beans.Book;
 import bookstore.project.db.DatabaseConnection;
 import bookstore.project.db.SQL_BOX;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookDAO implements IBookDAO {
@@ -20,10 +23,8 @@ public class BookDAO implements IBookDAO {
     @Override
     public boolean addBook(Book book) {
         String query = SQL_BOX.ADD_NEW_BOOK;
-        
-        try {
-            PreparedStatement statement = this.connection.prepareStatement(query);
-            
+
+        try (PreparedStatement statement = this.connection.prepareStatement(query)) {
             statement.setString(1, book.getTitle());
             statement.setString(2, book.getAuthor());
             statement.setString(3, book.getPublisher());
@@ -38,19 +39,20 @@ public class BookDAO implements IBookDAO {
 
             int result = statement.executeUpdate();
             return result == 1;
-        }
-        catch(SQLException e) {
-            throw new RuntimeException(e);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erreur lors de l’ajout du livre '" + book.getTitle() + "' : " + e.getMessage(), e
+            );
         }
     }
+
 
     @Override
     public boolean updateBook(Book book) {
         String query = SQL_BOX.UPDATE_BOOK;
-        
-        try {
-            PreparedStatement statement = this.connection.prepareStatement(query);
 
+        try (PreparedStatement statement = this.connection.prepareStatement(query)) {
             statement.setString(1, book.getTitle());
             statement.setString(2, book.getAuthor());
             statement.setString(3, book.getPublisher());
@@ -66,54 +68,97 @@ public class BookDAO implements IBookDAO {
 
             int result = statement.executeUpdate();
             return result == 1;
-        }
-        catch(SQLException e) {
-            throw new RuntimeException(e);
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erreur lors de la mise à jour du livre ID=" + book.getId() + " : " + e.getMessage(), e
+            );
         }
     }
 
     @Override
-    public boolean updateBook(int bookId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean deleteBook(int bookId) {
+        String query = SQL_BOX.DELETE_BOOK;
+
+        try (PreparedStatement statement = this.connection.prepareStatement(query)) {
+            statement.setInt(1, bookId);
+            int result = statement.executeUpdate();
+            return result == 1;
+            
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la suppression du livre ID=" + bookId + " : " + e.getMessage());
+            return false;
+        }
     }
 
     @Override
     public List<Book> getAllBooks() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<Book> books = new ArrayList<>();
+        String query = SQL_BOX.DELETE_BOOK;
+
+        try (PreparedStatement ps = this.connection.prepareStatement(query);
+            ResultSet result = ps.executeQuery()) {
+
+            while (result.next()) {
+                int id = result.getInt("id");
+                String title = result.getString("title");
+                String author = result.getString("author");
+                String publisher = result.getString("publisher");
+                java.sql.Date publicationDate = result.getDate("publication_date");
+                String category = result.getString("category");
+                String language = result.getString("language");
+                int pages = result.getInt("pages");
+                String format = result.getString("format");
+                double price = result.getDouble("price");
+                int stock = result.getInt("stock");
+                String description = result.getString("description");
+
+                Book found = new Book(
+                    id, title, author, publisher, publicationDate,
+                    category, language, pages, format, price, stock, description
+                );
+
+                books.add(found);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la lecture des livres : " + e.getMessage(), e);
+        }
+
+        return books;
     }
+
 
     @Override
     public Book getBook(int bookId) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    
-    public static void main(String[] args) {
-        try {
-            BookDAO bookDAO = new BookDAO();
+        String query = SQL_BOX.GET_BOOK;
+
+        try (PreparedStatement statement = this.connection.prepareStatement(query)) {
+            statement.setInt(1, bookId);
             
-            Book book = new Book(
-                23,
-                "JEE From scratch v3",
-                "Mohammed amine",
-                "T. Egerton",
-                java.sql.Date.valueOf("1813-01-28"),
-                "Roman",
-                "Anglais",
-                432,
-                "Broché",
-                12.99,
-                15,
-                "A classic English novel about love and society."
-            );
-
-            if (bookDAO.updateBook(book)) {
-                System.out.println("Book added successfully!");
-            } else {
-                System.out.println("Failed to add book.");
+            try (ResultSet result = statement.executeQuery()) {
+                if (result.next()) {
+                    return new Book(
+                        result.getInt("id"),
+                        result.getString("title"),
+                        result.getString("author"),
+                        result.getString("publisher"),
+                        result.getDate("publication_date"),
+                        result.getString("category"),
+                        result.getString("language"),
+                        result.getInt("pages"),
+                        result.getString("format"),
+                        result.getDouble("price"),
+                        result.getInt("stock"),
+                        result.getString("description")
+                    );
+                }
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                "Erreur lors de la récupération du livre ID=" + bookId + " : " + e.getMessage(), e
+            );
         }
+
+        return null;
     }
 }
