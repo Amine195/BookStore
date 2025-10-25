@@ -169,9 +169,10 @@ public class BookController extends HttpServlet {
         List<Book> books = bookDAO.getAllBooks();
         System.out.println(books.size());
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/Pages/books/bookList.jsp");
         try
         {
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/Pages/books/bookList.jsp");
+            request.setAttribute("books", books);
             dispatcher.forward(request, response);
         }
         catch(ServletException | IOException e)

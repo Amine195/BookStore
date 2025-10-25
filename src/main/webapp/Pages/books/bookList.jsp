@@ -4,6 +4,10 @@
 <main class="container mb-3">
     <section>
         <h1>Book list page</h1>
+        
+        <c:forEach var="book" items="${books}">
+            <p>${book.title}</p>
+        </c:forEach>
     </section>
 </main>
 
