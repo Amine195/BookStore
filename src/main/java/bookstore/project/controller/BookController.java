@@ -148,7 +148,20 @@ public class BookController extends HttpServlet {
     }
 
     private void deleteBook(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("deleteBook");
+        int id = Integer.parseInt(request.getParameter("id"));
+        
+        boolean success = bookDAO.deleteBook(id);
+        System.out.println(success);
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/Pages/books/bookList.jsp");
+        try
+        {
+            dispatcher.forward(request, response);
+        }
+        catch(ServletException | IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void getAllBooks(HttpServletRequest request, HttpServletResponse response) {
