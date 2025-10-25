@@ -94,7 +94,7 @@ public class BookDAO implements IBookDAO {
     @Override
     public List<Book> getAllBooks() {
         List<Book> books = new ArrayList<>();
-        String query = SQL_BOX.DELETE_BOOK;
+        String query = SQL_BOX.GET_ALL_BOOKS;
 
         try (PreparedStatement ps = this.connection.prepareStatement(query);
             ResultSet result = ps.executeQuery()) {

@@ -5,6 +5,7 @@ import bookstore.project.dao.BookDAO;
 import bookstore.project.dao.IBookDAO;
 import java.io.IOException;
 import java.sql.Date;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -165,10 +166,34 @@ public class BookController extends HttpServlet {
     }
 
     private void getAllBooks(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("getAllBooks");
+        List<Book> books = bookDAO.getAllBooks();
+        System.out.println(books.size());
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/Pages/books/bookList.jsp");
+        try
+        {
+            dispatcher.forward(request, response);
+        }
+        catch(ServletException | IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private void getBook(HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("getBook");
+        int id = Integer.parseInt(request.getParameter("id"));
+        
+        Book book = bookDAO.getBook(id);
+        System.out.println(book);
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/Pages/books/bookList.jsp");
+        try
+        {
+            dispatcher.forward(request, response);
+        }
+        catch(ServletException | IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
