@@ -12,6 +12,9 @@
         
         <%-- Google Font --%>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+        
+        <%-- Font awesome --%>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
 
         <%-- Styles --%>
         <link rel="stylesheet" href="Styles/styles.css" />

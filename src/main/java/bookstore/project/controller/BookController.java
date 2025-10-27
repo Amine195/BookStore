@@ -3,6 +3,8 @@ package bookstore.project.controller;
 import bookstore.project.beans.Book;
 import bookstore.project.dao.BookDAO;
 import bookstore.project.dao.IBookDAO;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
@@ -30,7 +32,8 @@ public class BookController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getPathInfo();        
+        String action = request.getPathInfo();
+
         action = (action == null) ? "/list" : action;
         
         switch(action) {
@@ -48,6 +51,10 @@ public class BookController extends HttpServlet {
                 
             case "/list":
                 getAllBooks(request, response);
+                break;
+                
+            case "/listJsonFormat":
+                getAllBooksJsonFormat(request, response);
                 break;
                 
             case "/get":
@@ -165,19 +172,33 @@ public class BookController extends HttpServlet {
         }
     }
 
-    private void getAllBooks(HttpServletRequest request, HttpServletResponse response) {
-        List<Book> books = bookDAO.getAllBooks();
-        System.out.println(books.size());
-
+    private void getAllBooks(HttpServletRequest request, HttpServletResponse response) {        
         try
         {
             RequestDispatcher dispatcher = request.getRequestDispatcher("/Pages/books/bookList.jsp");
-            request.setAttribute("books", books);
             dispatcher.forward(request, response);
         }
         catch(ServletException | IOException e)
         {
             e.printStackTrace();
+        }
+    }
+    
+    private void getAllBooksJsonFormat(HttpServletRequest request, HttpServletResponse response) {
+        List<Book> books = bookDAO.getAllBooks();
+        
+        try {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String json = gson.toJson(books);
+
+            response.getWriter().write(json);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
