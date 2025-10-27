@@ -5,6 +5,8 @@ import bookstore.project.dao.BookDAO;
 import bookstore.project.dao.IBookDAO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
@@ -155,19 +157,27 @@ public class BookController extends HttpServlet {
         }
     }
 
-    private void deleteBook(HttpServletRequest request, HttpServletResponse response) {
-        int id = Integer.parseInt(request.getParameter("id"));
-        
-        boolean success = bookDAO.deleteBook(id);
-        System.out.println(success);
+    private void deleteBook(HttpServletRequest request, HttpServletResponse response) {  
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/Pages/books/bookList.jsp");
-        try
-        {
-            dispatcher.forward(request, response);
-        }
-        catch(ServletException | IOException e)
-        {
+        try {
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = request.getReader();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            Gson gson = new Gson();
+            JsonObject json = gson.fromJson(sb.toString(), JsonObject.class);
+            int id = json.get("id").getAsInt();
+            
+            boolean status = bookDAO.deleteBook(id);
+            String jsonResponse = gson.toJson(status);
+            response.getWriter().write(jsonResponse);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -193,7 +203,6 @@ public class BookController extends HttpServlet {
 
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String json = gson.toJson(books);
-
             response.getWriter().write(json);
 
         } catch (IOException e) {
@@ -203,18 +212,27 @@ public class BookController extends HttpServlet {
     }
 
     private void getBook(HttpServletRequest request, HttpServletResponse response) {
-        int id = Integer.parseInt(request.getParameter("id"));
-        
-        Book book = bookDAO.getBook(id);
-        System.out.println(book);
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/Pages/books/bookList.jsp");
-        try
-        {
-            dispatcher.forward(request, response);
-        }
-        catch(ServletException | IOException e)
-        {
+        try {
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = request.getReader();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+
+            Gson gson = new Gson();
+            JsonObject json = gson.fromJson(sb.toString(), JsonObject.class);
+            int id = json.get("id").getAsInt();
+            
+            Book book = bookDAO.getBook(id);
+
+            String jsonResponse = gson.toJson(book);
+            response.getWriter().write(jsonResponse);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

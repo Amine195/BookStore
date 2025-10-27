@@ -1,8 +1,10 @@
 document.addEventListener('alpine:init', () => {
     Alpine.store('books', {
         booksList: [],
+        selectedBook: null,
 
         async loadBooks() {
+                        console.log(this.booksList.length)
             try {
                 const response = await fetch('http://localhost:8080/book/listJsonFormat');
 
@@ -16,6 +18,40 @@ document.addEventListener('alpine:init', () => {
                 console.error('Erreur lors du chargement des livres :', error);
             }
         },
+        
+        async selectBook(id) {
+            const response = await fetch("http://localhost:8080/book/get", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ id: id })
+            });
+
+            if (!response.ok) {
+                throw new Error("Erreur HTTP : " + response.status);
+            }
+
+            const data = await response.json();
+            this.selectedBook = data;
+        },
+        
+        async deleteBook(id) {
+            const response = await fetch("http://localhost:8080/book/delete", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ id: id })
+            });
+
+            if (!response.ok) {
+                throw new Error("Erreur HTTP : " + response.status);
+            }
+
+            const data = await response.json();
+            return data;
+        }
     });
 
 
@@ -32,12 +68,20 @@ document.addEventListener('alpine:init', () => {
             this.selectedOnglet = "New";
         },
         
-        showBookDetails(id) {
+        async showBookDetails(id) {
             this.selectedOnglet = "Details";
+            await Alpine.store('books').selectBook(id);
         },
         
         editBook(id) {
             this.selectedOnglet = "Edit";
+        },
+        
+        async deleteBook(id) {
+            const response = await Alpine.store('books').deleteBook(id);
+            if(response) {
+                await Alpine.store('books').loadBooks();
+            }
         }
     }));
 });
