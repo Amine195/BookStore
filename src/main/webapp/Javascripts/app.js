@@ -1,86 +1,172 @@
-document.addEventListener('alpine:init', () => {
-    Alpine.store('books', {
+document.addEventListener("alpine:init", () => {
+    Alpine.store("books", {
         booksList: [],
-        selectedBook: null,
-
-        async loadBooks() {
-                        console.log(this.booksList.length)
+        
+        async sendRequest(url, method = "GET", data = null) {
             try {
-                const response = await fetch('http://localhost:8080/book/listJsonFormat');
+                const options = {
+                    method,
+                    headers: { "Content-Type": "application/json; charset=UTF-8" }
+                };
 
-                if (!response.ok) {
-                    throw new Error('Erreur HTTP : ' + response.status);
+                if (data) {
+                    options.body = JSON.stringify(data);
                 }
 
-                const data = await response.json();
-                this.booksList = data;
+                const result = await fetch(url, options);
+                if (!result.ok) throw new Error(`Erreur HTTP ${result.status}`);
+
+                const response = await result.json();
+                return response;
             } catch (error) {
-                console.error('Erreur lors du chargement des livres :', error);
+                console.error("Erreur dans sendRequest :", error);
+                throw error;
             }
+        },
+
+        async loadBooks() {
+            this.booksList = await this.sendRequest("http://localhost:8080/book/listJsonFormat");
+        },
+        
+        async saveBook(book) {
+            return await this.sendRequest("http://localhost:8080/book/add", "POST", book);
         },
         
         async selectBook(id) {
-            const response = await fetch("http://localhost:8080/book/get", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ id: id })
-            });
-
-            if (!response.ok) {
-                throw new Error("Erreur HTTP : " + response.status);
-            }
-
-            const data = await response.json();
-            this.selectedBook = data;
+            return await this.sendRequest("http://localhost:8080/book/get", "POST", { id });
+        },
+        
+        async updateBook(book) {
+            return await this.sendRequest("http://localhost:8080/book/update", "POST", book);
         },
         
         async deleteBook(id) {
-            const response = await fetch("http://localhost:8080/book/delete", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ id: id })
-            });
-
-            if (!response.ok) {
-                throw new Error("Erreur HTTP : " + response.status);
-            }
-
-            const data = await response.json();
-            return data;
+            return await this.sendRequest("http://localhost:8080/book/delete", "POST", { id });
         }
     });
 
-
-    Alpine.data('bookApp', () => ({
-        selectedOnglet: "Details",
+    Alpine.data("bookApp", () => ({
+        // Prop data
+        selectedOption: "Details",
         isLoading: true,
         
+        // Prop Book
+        bookId: null,
+        bookTitle: "",
+        bookAuthor: "",
+        bookPublisher: "",
+        bookPublicationDate: "",
+        bookCategory: "",
+        bookLanguage: "",
+        bookPages: null,
+        bookFormat: "",
+        bookStock: null,
+        bookPrice: null,
+        bookDescription: "",
+
+        // Utils
+        resetBook() {
+            this.bookId = null;
+            this.bookTitle = "";
+            this.bookAuthor = "";
+            this.bookPublisher = "";
+            this.bookPublicationDate = "";
+            this.bookCategory = "";
+            this.bookLanguage = "";
+            this.bookPages = null;
+            this.bookFormat = "";
+            this.bookStock = null;
+            this.bookPrice = null;
+            this.bookDescription = "";
+        },
+        
+        newBookObj() {
+            return {
+                id: this.bookId,
+                title: this.bookTitle,
+                author: this.bookAuthor,
+                publisher: this.bookPublisher,
+                publicationDate: this.bookPublicationDate,
+                category: this.bookCategory,
+                language: this.bookLanguage,
+                pages: this.bookPages,
+                format: this.bookFormat,
+                stock: this.bookStock,
+                price: this.bookPrice,
+                description: this.bookDescription
+            };
+        },
+        
+        getBookObj(response) {
+            this.bookId = response.id;
+            this.bookTitle = response.title;
+            this.bookAuthor = response.author;
+            this.bookPublisher = response.publisher;
+            this.bookPublicationDate = new Date(response.publicationDate).toISOString().slice(0, 10);
+            this.bookCategory = response.category;
+            this.bookLanguage = response.language;
+            this.bookPages = response.pages;
+            this.bookFormat = response.format;
+            this.bookStock = response.stock;
+            this.bookPrice = response.price;
+            this.bookDescription = response.description;
+        },
+        
+        // Méthods
         async init() {
-            await Alpine.store('books').loadBooks();
+            await Alpine.store("books").loadBooks();
             setTimeout(() => this.isLoading = false, 1000);
         },
         
+        async submitForm() {
+            if (this.selectedOption == "New") {
+                await this.addBook();
+            } else if (this.selectedOption == "Edit") {
+                await this.updateBook();
+            }
+        },
+        
         newBook() {
-            this.selectedOnglet = "New";
+            this.selectedOption = "New";
+            this.resetBook();
+        },
+        
+        async addBook() {
+            const book = this.newBookObj();
+            const response = await Alpine.store("books").saveBook(book);
+
+            if(response) {
+                await Alpine.store("books").loadBooks();
+                this.resetBook();
+            }
         },
         
         async showBookDetails(id) {
-            this.selectedOnglet = "Details";
-            await Alpine.store('books').selectBook(id);
+            this.selectedOption = "Details";
+            const response = await Alpine.store("books").selectBook(id);
+            this.getBookObj(response);
+        },
+
+        async editBook(id) {
+            this.selectedOption = "Edit";
+            const response = await Alpine.store("books").selectBook(id);
+            this.getBookObj(response);
         },
         
-        editBook(id) {
-            this.selectedOnglet = "Edit";
+        async updateBook() {
+            const book = this.newBookObj();
+            const response = await Alpine.store("books").updateBook(book);
+            
+            if(response) {
+                await Alpine.store("books").loadBooks(book);
+                this.resetBook();
+            }
         },
         
         async deleteBook(id) {
-            const response = await Alpine.store('books').deleteBook(id);
+            const response = await Alpine.store("books").deleteBook(id);
             if(response) {
-                await Alpine.store('books').loadBooks();
+                await Alpine.store("books").loadBooks();
             }
         }
     }));

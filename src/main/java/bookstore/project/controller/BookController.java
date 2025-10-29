@@ -72,87 +72,91 @@ public class BookController extends HttpServlet {
     private void addNewBook(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // 1. Récupération et nettoyage des paramètres
-        String title = request.getParameter("title");
-        String author = request.getParameter("author");
-        String publisher = request.getParameter("publisher");
-        String publicationDateStr = request.getParameter("publicationDate");
-        String category = request.getParameter("category");
-        String language = request.getParameter("language");
-        String pagesStr = request.getParameter("pages");
-        String format = request.getParameter("format");
-        String priceStr = request.getParameter("price");
-        String stockStr = request.getParameter("stock");
-        String description = request.getParameter("description");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         
-        // 2. Convertir les types       
-        int pages = Integer.parseInt(pagesStr);
-        double price = Double.parseDouble(priceStr);
-        int stock = Integer.parseInt(stockStr);
-        Date publicationDate = Date.valueOf(publicationDateStr);
-        
-        // 3. Créer le Book
-        Book newBook = new Book(
-            title, author, publisher, publicationDate, category,
-            language, pages, format, price, stock, description
-        );
-        
-        // 4. Enregistrer le livre via le DAO
-        boolean success = bookDAO.addBook(newBook);
-        System.out.println(success);
-        
-        // 5. Retourner la page JSP
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/Pages/books/bookList.jsp");
         try
         {
-            dispatcher.forward(request, response);
-        }
-        catch(ServletException | IOException e)
-        {
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = request.getReader();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            
+            Gson gson = new Gson();
+            JsonObject json = gson.fromJson(sb.toString(), JsonObject.class);
+
+            String title = json.get("title").getAsString();
+            String author = json.get("author").getAsString();
+            String publisher = json.get("publisher").getAsString();
+            String publicationDateStr = json.get("publicationDate").getAsString();
+            String category = json.get("category").getAsString();
+            String language = json.get("language").getAsString();
+            int pages = json.get("pages").getAsInt();
+            String format = json.get("format").getAsString();
+            double price = json.get("price").getAsDouble();
+            int stock = json.get("stock").getAsInt();
+            String description = json.get("description").getAsString();
+            
+            Date publicationDate = Date.valueOf(publicationDateStr);
+            
+            Book newBook = new Book(
+                title, author, publisher, publicationDate, category,
+                language, pages, format, price, stock, description
+            );
+            
+            boolean status = bookDAO.addBook(newBook);
+            String jsonResponse = gson.toJson(status);
+            response.getWriter().write(jsonResponse);
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void updateBook(HttpServletRequest request, HttpServletResponse response) {
-        int id = Integer.parseInt(request.getParameter("id"));
         
-        // 1. Récupération et nettoyage des paramètres
-        String title = request.getParameter("title");
-        String author = request.getParameter("author");
-        String publisher = request.getParameter("publisher");
-        String publicationDateStr = request.getParameter("publicationDate");
-        String category = request.getParameter("category");
-        String language = request.getParameter("language");
-        String pagesStr = request.getParameter("pages");
-        String format = request.getParameter("format");
-        String priceStr = request.getParameter("price");
-        String stockStr = request.getParameter("stock");
-        String description = request.getParameter("description");
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         
-        // 2. Convertir les types       
-        int pages = Integer.parseInt(pagesStr);
-        double price = Double.parseDouble(priceStr);
-        int stock = Integer.parseInt(stockStr);
-        Date publicationDate = Date.valueOf(publicationDateStr);
-        
-        // 3. Créer le Book
-        Book newBook = new Book(
-            id, title, author, publisher, publicationDate, category,
-            language, pages, format, price, stock, description
-        );
-        
-        // 4. Enregistrer le livre via le DAO
-        boolean success = bookDAO.updateBook(newBook);
-        System.out.println(success);
-        
-        // 5. Retourner la page JSP
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/Pages/books/bookList.jsp");
         try
         {
-            dispatcher.forward(request, response);
-        }
-        catch(ServletException | IOException e)
-        {
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = request.getReader();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            
+            Gson gson = new Gson();
+            JsonObject json = gson.fromJson(sb.toString(), JsonObject.class);
+            
+            int id = json.get("id").getAsInt();
+            String title = json.get("title").getAsString();
+            String author = json.get("author").getAsString();
+            String publisher = json.get("publisher").getAsString();
+            String publicationDateStr = json.get("publicationDate").getAsString();
+            String category = json.get("category").getAsString();
+            String language = json.get("language").getAsString();
+            int pages = json.get("pages").getAsInt();
+            String format = json.get("format").getAsString();
+            double price = json.get("price").getAsDouble();
+            int stock = json.get("stock").getAsInt();
+            String description = json.get("description").getAsString();
+            
+            Date publicationDate = Date.valueOf(publicationDateStr);
+            
+            Book updatedBook = new Book(
+                id, title, author, publisher, publicationDate, category,
+                language, pages, format, price, stock, description
+            );
+            
+            boolean status = bookDAO.updateBook(updatedBook);
+            String jsonResponse = gson.toJson(status);
+            response.getWriter().write(jsonResponse);
+            
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
