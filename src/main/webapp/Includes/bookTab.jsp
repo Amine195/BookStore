@@ -1,29 +1,16 @@
-<div class="card shadow-sm mb-3">
-    <div class="card-body">
-        <h6 class="card-title fw-bold">
-            <img class="me-3" src="Images/book.png" alt="Logo" width="25">
-            <span x-text="book.title"></span>
-        </h6>
-
-        <p class="card-text small" x-text="book.description"></p>
-        <p class="card-text">
-            <small class="text-body-secondary">
-                Publication date &nbsp; <span x-text="book.publicationDate"></span>
-            </small>
-        </p>
-
-        <div class="d-flex mt-3">
-            <div class="me-auto">
-                <button class="btn btn-outline-primary btn-sm me-2" @click="showBookDetails(book.id)">
-                    <i class="bi bi-arrow-repeat"></i> Details
-                </button>
-                <button class="btn btn-outline-success btn-sm me-2" @click="editBook(book.id)">
-                    <i class="bi bi-pen"></i> Edit
-                </button>
-                <button class="btn btn-outline-danger btn-sm me-2" @click="deleteBook(book.id)">
-                    <i class="bi bi-trash3"></i> Delete
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
+<tr>
+    <th scope="row" x-text="book.id">1</th>
+    <td x-text="book.title">Mark</td>
+    <td x-text="book.publicationDate">Otto</td>
+    <td>
+        <button class="btn btn-outline-primary btn-sm me-2" @click="showBookDetails(book.id)">
+            <i class="bi bi-arrow-repeat"></i>
+        </button>
+        <button class="btn btn-outline-success btn-sm me-2" @click="editBook(book.id)">
+            <i class="bi bi-pen"></i>
+        </button>
+        <button class="btn btn-outline-danger btn-sm me-2" @click="deleteBook(book.id)">
+            <i class="bi bi-trash3"></i>
+        </button>
+    </td>
+</tr>

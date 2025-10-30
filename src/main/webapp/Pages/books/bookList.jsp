@@ -46,14 +46,28 @@
                     </template>
                  
                     <template x-if="$store.books.booksList.length > 0">
-                        <template x-for="book in $store.books.booksList" :key="book.id">
-                            <c:if test="${sessionScope.role eq 'ADMIN'}">
-                                <%@ include file="/Includes/bookTab.jsp" %>
-                            </c:if>
-                            <c:if test="${sessionScope.role eq 'USER'}">
+                        <c:if test="${sessionScope.role eq 'ADMIN'}">
+                            <table class="table small">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Title</th>
+                                        <th scope="col">Date de publication</th>
+                                        <th scope="col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template x-for="book in $store.books.booksList" :key="book.id">
+                                        <%@ include file="/Includes/bookTab.jsp" %>
+                                    </template>  
+                                </tbody>
+                            </table>
+                        </c:if>
+                        <c:if test="${sessionScope.role eq 'USER'}">
+                            <template x-for="book in $store.books.booksList" :key="book.id">
                                 <%@ include file="/Includes/bookCard.jsp" %>
-                            </c:if>
-                        </template>
+                            </template>
+                        </c:if>
                     </template> 
                 </div>
             </template>
