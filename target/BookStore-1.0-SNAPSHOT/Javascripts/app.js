@@ -176,6 +176,13 @@ document.addEventListener("alpine:init", () => {
             if(response) {
                 await Alpine.store("books").loadBooks();
                 this.resetBook();
+                
+                Swal.fire({
+                    title: "ADD Book",
+                    html: `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was added successfully`,
+                    icon: "success",
+                    confirmButtonColor: '#8EBE79'
+                });
             }
         },
         
@@ -197,14 +204,49 @@ document.addEventListener("alpine:init", () => {
             
             if(response) {
                 await Alpine.store("books").loadBooks(book);
+                
+                Swal.fire({
+                    title: "Update Book",
+                    html: `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was updated successfully`,
+                    icon: "success",
+                    confirmButtonColor: '#8EBE79'
+                });
+                
                 this.resetBook();
             }
         },
         
         async deleteBook(id) {
-            const response = await Alpine.store("books").deleteBook(id);
-            if(response) {
-                await Alpine.store("books").loadBooks();
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: false
+            });
+            
+            const result = await swalWithBootstrapButtons.fire({
+                title: "Are you sure?",
+                text: "This action cannot be undone.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true
+            });
+            
+            if (result.isConfirmed) {
+                const response = await Alpine.store("books").deleteBook(id);
+                
+                if (response) {
+                    await Alpine.store("books").loadBooks();
+                    swalWithBootstrapButtons.fire({
+                        title: "Deleted!",
+                        text: "The book has been successfully deleted.",
+                        icon: "success",
+                        confirmButtonColor: "#8EBE79"
+                    });
+                }
             }
         }
     }));
@@ -247,16 +289,7 @@ document.addEventListener("alpine:init", () => {
                     this.responseMsgText = "The password is correct. redirection...";
                     
                     await new Promise(resolve => setTimeout(resolve, 1000));
-                    
-                    this.isLoading = false;
-                    this.responseIsValid = null;
-                    this.responseMsgText = null;
-                    
-                    this. username = "";
-                    this.password = "";
-                    this.isAdmin = false;
-                    
-                   window.location.href = "http://localhost:8080/book";
+                    window.location.href = "http://localhost:8080/book";
                 }
             } catch (error) {
                 console.error("Erreur dans submitForm :", error);

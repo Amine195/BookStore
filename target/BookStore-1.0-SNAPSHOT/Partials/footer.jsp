@@ -1,5 +1,7 @@
     <%@ include file="/Includes/footer.jsp" %>
     
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <%-- Scripts --%>
     <script type="text/javascript" src="Javascripts/app.js"></script>
     

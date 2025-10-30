@@ -26,7 +26,7 @@
 
                     <span class="mx-3"></span>
 
-                    <button class="btn" @click="await $store.auth.logout()">
+                    <button class="btn mt-1" @click="await $store.auth.logout()">
                         <i class="bi bi-box-arrow-right me-1"></i>
                         <span class="small">Logout</span>
                     </button>

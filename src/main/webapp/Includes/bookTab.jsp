@@ -17,8 +17,11 @@
                 <button class="btn btn-outline-primary btn-sm me-2" @click="showBookDetails(book.id)">
                     <i class="bi bi-arrow-repeat"></i> Details
                 </button>
-                <button class="btn btn-outline-success btn-sm">
-                    <i class="bi bi-plus"></i> Add to cart
+                <button class="btn btn-outline-success btn-sm me-2" @click="editBook(book.id)">
+                    <i class="bi bi-pen"></i> Edit
+                </button>
+                <button class="btn btn-outline-danger btn-sm me-2" @click="deleteBook(book.id)">
+                    <i class="bi bi-trash3"></i> Delete
                 </button>
             </div>
         </div>

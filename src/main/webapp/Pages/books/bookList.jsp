@@ -40,14 +40,19 @@
             
             <%-- BOOK LIST CARD --%>
             <template x-if="!isLoading">
-                <div>
+                <div>                   
                     <template x-if="$store.books.booksList.length === 0">
                         <p class="small"><span class="fw-bold text-primary me-2">|</span> Aucun produit dans la base de données.</p>
                     </template>
                  
                     <template x-if="$store.books.booksList.length > 0">
                         <template x-for="book in $store.books.booksList" :key="book.id">
-                            <%@ include file="/Includes/bookCard.jsp" %>
+                            <c:if test="${sessionScope.role eq 'ADMIN'}">
+                                <%@ include file="/Includes/bookTab.jsp" %>
+                            </c:if>
+                            <c:if test="${sessionScope.role eq 'USER'}">
+                                <%@ include file="/Includes/bookCard.jsp" %>
+                            </c:if>
                         </template>
                     </template> 
                 </div>
