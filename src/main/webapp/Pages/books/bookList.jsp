@@ -1,6 +1,6 @@
 <%@ include file="/Partials/header.jsp" %>
 
-<main x-data="bookApp" class="container">
+<main x-data="bookApp" class="container mt-4">
     <%@ include file="/Includes/breadcrumb.jsp" %>
         
     <section class="row">
@@ -22,7 +22,9 @@
             <%-- TITLE --%>
             <h5 class="fw-bold mb-3">
                 Books List &nbsp;
-                <button class="btn btn-sm btn-outline-primary" @click="newBook()">Add book</button>
+                <c:if test="${sessionScope.role eq 'ADMIN'}">
+                    <button class="btn btn-sm btn-outline-primary" @click="newBook()">Add book</button>
+                </c:if>
             </h5>
             <hr>
             

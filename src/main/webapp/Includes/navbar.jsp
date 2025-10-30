@@ -1,4 +1,4 @@
-<header class="mb-4">
+<header>
     <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="/">
@@ -8,14 +8,30 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
-            <div class="collapse navbar-collapse mt-1" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold" aria-current="page" href="/book"><small>Books</small></a>
-                    </li>      
-                </ul>
-            </div>
-        </div>
+
+            <c:if test="${sessionScope.isConnected}">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mt-1">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/book">
+                                <small>Books</small>
+                            </a>
+                        </li>      
+                    </ul>
+
+                    <span class="d-inline-flex align-items-center mt-1">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span class="small">Bonjour ${sessionScope.username}</span>
+                    </span>
+
+                    <span class="mx-3"></span>
+
+                    <button class="btn" @click="await $store.auth.logout()">
+                        <i class="bi bi-box-arrow-right me-1"></i>
+                        <span class="small">Logout</span>
+                    </button>
+                </div>
+            </c:if>
+        </div>     
     </nav>
 </header>

@@ -4,9 +4,25 @@
         <servlet-name>BookController</servlet-name>
         <servlet-class>bookstore.project.controller.BookController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ConnectionController</servlet-name>
+        <servlet-class>bookstore.project.controller.ConnectionController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AuthController</servlet-name>
+        <servlet-class>bookstore.project.controller.AuthController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>BookController</servlet-name>
         <url-pattern>/book/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ConnectionController</servlet-name>
+        <url-pattern>/connection</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AuthController</servlet-name>
+        <url-pattern>/auth/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

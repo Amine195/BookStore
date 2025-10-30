@@ -22,5 +22,5 @@
         <%-- Page title --%>
         <title>Book store</title>
     </head>
-    <body>
+    <body x-data>
         <%@ include file="/Includes/navbar.jsp" %>

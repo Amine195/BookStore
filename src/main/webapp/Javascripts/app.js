@@ -1,4 +1,42 @@
 document.addEventListener("alpine:init", () => {
+    Alpine.store("auth", {
+        async sendRequest(url, method = "GET", data = null) {
+            try {
+                const options = {
+                    method,
+                    headers: { "Content-Type": "application/json; charset=UTF-8" }
+                };
+
+                if (data) {
+                    options.body = JSON.stringify(data);
+                }
+
+                const result = await fetch(url, options);
+                if (!result.ok) throw new Error(`Erreur HTTP ${result.status}`);
+
+                const response = await result.json();
+                return response;
+            } catch (error) {
+                console.error("Erreur dans sendRequest :", error);
+                throw error;
+            }
+        },
+        
+        async login(data) {
+            return await this.sendRequest("http://localhost:8080/auth/login", "POST", data);
+        },
+        
+        async logout() {
+            response = await this.sendRequest("http://localhost:8080/auth/logout", "POST");
+            
+            if (response.success) {
+                window.location.href = "http://localhost:8080/connection";
+            } else {
+                console.error("Logout failed");
+            }
+        }
+    });
+    
     Alpine.store("books", {
         booksList: [],
         
@@ -168,6 +206,66 @@ document.addEventListener("alpine:init", () => {
             if(response) {
                 await Alpine.store("books").loadBooks();
             }
+        }
+    }));
+    
+    Alpine.data("login", () => ({
+        // Prop data
+        username: "",
+        password: "",
+        isAdmin: false,
+        
+        isLoading: false,
+        responseIsValid: null,
+        responseMsgText: null,
+        
+        // Methods
+        async submitForm() {
+            try {
+                this.isLoading = true;
+                
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                const response = await Alpine.store("auth").login({
+                    username: this.username,
+                    password: this.password,
+                    isAdmin: this.isAdmin
+                });
+               
+                if(response == false) {
+                    this.responseIsValid = false;
+                    this.responseMsgText = "The password is incorrect";
+                    
+                    this. username = "";
+                    this.password = "";
+                    this.isAdmin = false;
+                    
+                    this.isLoading = false;
+                    
+                } else if(response == true) {
+                    this.responseIsValid = true;
+                    this.responseMsgText = "The password is correct. redirection...";
+                    
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    this.isLoading = false;
+                    this.responseIsValid = null;
+                    this.responseMsgText = null;
+                    
+                    this. username = "";
+                    this.password = "";
+                    this.isAdmin = false;
+                    
+                   window.location.href = "http://localhost:8080/book";
+                }
+            } catch (error) {
+                console.error("Erreur dans submitForm :", error);
+            }
+        },
+        
+        handleInput() {
+            this.responseIsValid = null;
+            this.responseMsgText = null;
         }
     }));
 });

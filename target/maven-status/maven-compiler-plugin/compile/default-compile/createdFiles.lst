@@ -2,5 +2,7 @@ bookstore\project\db\SQL_BOX.class
 bookstore\project\dao\BookDAO.class
 bookstore\project\controller\BookController.class
 bookstore\project\beans\Book.class
+bookstore\project\controller\AuthController.class
+bookstore\project\controller\ConnectionController.class
 bookstore\project\dao\IBookDAO.class
 bookstore\project\db\DatabaseConnection.class
