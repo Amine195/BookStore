@@ -1,5 +1,3 @@
-import booksStore from "../stores/booksStore.js";
-
 export default () => ({
     selectedOption: "Details",
     isLoading: true,
@@ -96,7 +94,7 @@ export default () => ({
         const response = await Alpine.store("books").saveBook(book);
 
         if(response) {
-            await Alpine.store("books").loadBooks();
+            await Alpine.store("books").loadBooks(this.filters);
             this.resetBook();
 
             Swal.fire({
@@ -125,7 +123,7 @@ export default () => ({
         const response = await Alpine.store("books").updateBook(book);
 
         if(response) {
-            await Alpine.store("books").loadBooks(book);
+            await Alpine.store("books").loadBooks(this.filters);
 
             Swal.fire({
                 title: "Update Book",
@@ -161,7 +159,7 @@ export default () => ({
             const response = await Alpine.store("books").deleteBook(id);
 
             if (response) {
-                await Alpine.store("books").loadBooks();
+                await Alpine.store("books").loadBooks(this.filters);
                 swalWithBootstrapButtons.fire({
                     title: "Deleted!",
                     text: "The book has been successfully deleted.",

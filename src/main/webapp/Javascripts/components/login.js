@@ -1,5 +1,3 @@
-import booksStore from "../stores/authStore.js";
-
 export default () => ({
     username: "",
     password: "",
