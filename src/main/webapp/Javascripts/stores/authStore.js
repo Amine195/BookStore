@@ -26,7 +26,7 @@ export default {
     },
 
     async logout() {
-        response = await this.sendRequest("http://localhost:8080/auth/logout", "POST");
+        const response = await this.sendRequest("http://localhost:8080/auth/logout", "POST");
         
         if (response.success) {
             window.location.href = "http://localhost:8080/connection";
