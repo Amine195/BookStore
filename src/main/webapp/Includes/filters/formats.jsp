@@ -2,15 +2,15 @@
     <label class="fw-semibold text-body-tertiary mb-3">Format</label>
     <div class="small">
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="format" value="Broché" id="broche">
+            <input class="form-check-input" type="checkbox" name="format" value="Broché" id="broche" x-model="filters.format">
             <label class="form-check-label" for="broche">Broché</label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="format" value="Poche" id="poche">
+            <input class="form-check-input" type="checkbox" name="format" value="Poche" id="poche" x-model="filters.format">
             <label class="form-check-label" for="poche">Poche</label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="format" value="Ebook" id="ebook">
+            <input class="form-check-input" type="checkbox" name="format" value="Ebook" id="ebook" x-model="filters.format">
             <label class="form-check-label" for="ebook">Ebook</label>
         </div>
     </div>

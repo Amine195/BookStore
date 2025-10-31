@@ -8,10 +8,10 @@
         <%-- FILTRES --%>
         <div class="col-2">
             <h5 class="fw-bold mb-3">Filtres</h5>
-            <form id="filtersForm">
+            <form id="filtersForm" @change="sendFilters()">
                 <%@ include file="/Includes/filters/categories.jsp" %>
-                <%@ include file="/Includes/filters/langues.jsp" %>
                 <%@ include file="/Includes/filters/formats.jsp" %>
+                <%@ include file="/Includes/filters/langues.jsp" %>
                 <%@ include file="/Includes/filters/stocks.jsp" %>
             </form>
         </div>

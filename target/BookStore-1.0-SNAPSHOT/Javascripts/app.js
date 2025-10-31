@@ -40,16 +40,13 @@ document.addEventListener("alpine:init", () => {
     Alpine.store("books", {
         booksList: [],
         
-        async sendRequest(url, method = "GET", data = null) {
+        async sendRequest(url, method, data) {
             try {
                 const options = {
                     method,
-                    headers: { "Content-Type": "application/json; charset=UTF-8" }
+                    headers: { "Content-Type": "application/json; charset=UTF-8" },
+                    body: JSON.stringify(data)
                 };
-
-                if (data) {
-                    options.body = JSON.stringify(data);
-                }
 
                 const result = await fetch(url, options);
                 if (!result.ok) throw new Error(`Erreur HTTP ${result.status}`);
@@ -62,8 +59,8 @@ document.addEventListener("alpine:init", () => {
             }
         },
 
-        async loadBooks() {
-            this.booksList = await this.sendRequest("http://localhost:8080/book/listJsonFormat");
+        async loadBooks(data) {
+            this.booksList = await this.sendRequest("http://localhost:8080/book/listJsonFormat", "POST", data);
         },
         
         async saveBook(book) {
@@ -87,6 +84,12 @@ document.addEventListener("alpine:init", () => {
         // Prop data
         selectedOption: "Details",
         isLoading: true,
+        filters: {
+            categories: [],
+            format: [],
+            langue: [],
+            enStock: []
+        },
         
         // Prop Book
         bookId: null,
@@ -152,7 +155,7 @@ document.addEventListener("alpine:init", () => {
         
         // Méthods
         async init() {
-            await Alpine.store("books").loadBooks();
+            await Alpine.store("books").loadBooks(this.filters);
             setTimeout(() => this.isLoading = false, 1000);
         },
         
@@ -178,7 +181,7 @@ document.addEventListener("alpine:init", () => {
                 this.resetBook();
                 
                 Swal.fire({
-                    title: "ADD Book",
+                    title: "Add Book",
                     html: `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was added successfully`,
                     icon: "success",
                     confirmButtonColor: '#8EBE79'
@@ -227,7 +230,7 @@ document.addEventListener("alpine:init", () => {
             
             const result = await swalWithBootstrapButtons.fire({
                 title: "Are you sure?",
-                text: "This action cannot be undone.",
+                text: "This action is irreversible.",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Yes, delete it!",
@@ -248,7 +251,11 @@ document.addEventListener("alpine:init", () => {
                     });
                 }
             }
-        }
+        },
+                
+        async sendFilters() {
+            await Alpine.store("books").loadBooks(this.filters);
+        },
     }));
     
     Alpine.data("login", () => ({

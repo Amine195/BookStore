@@ -5,11 +5,13 @@ import bookstore.project.dao.BookDAO;
 import bookstore.project.dao.IBookDAO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -199,19 +201,58 @@ public class BookController extends HttpServlet {
     }
     
     private void getAllBooksJsonFormat(HttpServletRequest request, HttpServletResponse response) {
-        List<Book> books = bookDAO.getAllBooks();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
         
         try {
-            response.setContentType("application/json");
-            response.setCharacterEncoding("UTF-8");
+            List<Book> books = bookDAO.getAllBooks();
+            
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = request.getReader();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
 
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String json = gson.toJson(books);
-            response.getWriter().write(json);
+            Gson gson = new Gson();
+            JsonObject json = gson.fromJson(sb.toString(), JsonObject.class);
+            
+            JsonArray categories = json.getAsJsonArray("categories");
+            JsonArray format = json.getAsJsonArray("format");
+            JsonArray langue = json.getAsJsonArray("langue");
+            JsonArray enStock = json.getAsJsonArray("enStock");
+            
+            List<Book> filtered = books.stream()
+                .filter(b -> {
+                    boolean match = true;
+                    if (categories != null && categories.size() > 0)
+                        match &= contains(categories, b.getCategory());
 
+                    if (format != null && format.size() > 0)
+                        match &= contains(format, b.getFormat());
+
+                    if (langue != null && langue.size() > 0)
+                        match &= contains(langue, b.getLanguage());
+
+                    if (enStock != null && enStock.size() > 0) {
+                        String value = enStock.get(0).getAsString();
+                        if (value.equalsIgnoreCase("true")) {
+                            match &= b.getStock() > 0;
+                        } else if (value.equalsIgnoreCase("false")) {
+                            match &= b.getStock() == 0;
+                        }
+                    } else {
+                        match &= b.getStock() >= 0;
+                    }
+
+                    return match;
+                })
+                .collect(Collectors.toList());
+            
+            response.getWriter().write(gson.toJson(filtered));
+            
         } catch (IOException e) {
             e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -239,5 +280,14 @@ public class BookController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    
+    private boolean contains(JsonArray array, String value) {
+        for (int i = 0; i < array.size(); i++) {
+            if (array.get(i).getAsString().equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
