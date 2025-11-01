@@ -17,6 +17,6 @@ public class SQL_BOX {
         "SELECT * FROM book;";
     
     public static final String GET_BOOK =
-        "SELECT * FROM Book WHERE id=?";
+        "SELECT * FROM book WHERE id=?";
 
 }
