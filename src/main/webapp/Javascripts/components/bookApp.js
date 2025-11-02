@@ -1,6 +1,8 @@
 export default () => ({
+    // État global du composant
     selectedOption: "Details",
     isLoading: true,
+    
     filters: {
         categories: [],
         format: [],
@@ -8,7 +10,7 @@ export default () => ({
         enStock: []
     },
 
-    // Prop Book
+    // Propriétés d’un livre
     bookId: null,
     bookTitle: "",
     bookAuthor: "",
@@ -22,7 +24,7 @@ export default () => ({
     bookPrice: null,
     bookDescription: "",
 
-    // Utils
+    // Méthodes utilitaires
     resetBook() {
         this.bookId = null;
         this.bookTitle = "";
@@ -56,39 +58,50 @@ export default () => ({
     },
 
     getBookObj(response) {
-        this.bookId = response.id;
-        this.bookTitle = response.title;
-        this.bookAuthor = response.author;
-        this.bookPublisher = response.publisher;
-        this.bookPublicationDate = new Date(response.publicationDate).toISOString().slice(0, 10);
-        this.bookCategory = response.category;
-        this.bookLanguage = response.language;
-        this.bookPages = response.pages;
-        this.bookFormat = response.format;
-        this.bookStock = response.stock;
-        this.bookPrice = response.price;
-        this.bookDescription = response.description;
+        if (!response) return;
+
+        this.bookId = response.id ?? null;
+        this.bookTitle = response.title ?? "";
+        this.bookAuthor = response.author ?? "";
+        this.bookPublisher = response.publisher ?? "";
+        this.bookPublicationDate = response.publicationDate
+            ? new Date(response.publicationDate).toISOString().slice(0, 10)
+            : "";
+        this.bookCategory = response.category ?? "";
+        this.bookLanguage = response.language ?? "";
+        this.bookPages = response.pages ?? null;
+        this.bookFormat = response.format ?? "";
+        this.bookStock = response.stock ?? null;
+        this.bookPrice = response.price ?? null;
+        this.bookDescription = response.description ?? "";
     },
 
-    // Méthods
+    // Initialise la liste des livres et gère le loader
     async init() {
-        await Alpine.store("books").loadBooks(this.filters);
-        setTimeout(() => this.isLoading = false, 1000);
+        try {
+            await Alpine.store("books").loadBooks(this.filters);
+        } finally {
+            // On désactive le loader après 1 seconde
+            setTimeout(() => (this.isLoading = false), 1000);
+        }
     },
 
+    // Soumet le formulaire selon le mode actuel (ajout ou modification)
     async submitForm() {
-        if (this.selectedOption == "New") {
+        if (this.selectedOption === "New") {
             await this.addBook();
-        } else if (this.selectedOption == "Edit") {
+        } else if (this.selectedOption === "Edit") {
             await this.updateBook();
         }
     },
 
+    // Prépare le formulaire pour un nouveau livre
     newBook() {
         this.selectedOption = "New";
         this.resetBook();
     },
 
+    // Ajoute un nouveau livre
     async addBook() {
         const book = this.newBookObj();
         const response = await Alpine.store("books").saveBook(book);
@@ -106,18 +119,21 @@ export default () => ({
         }
     },
 
+    // Affiche les détails d’un livre
     async showBookDetails(id) {
         this.selectedOption = "Details";
         const response = await Alpine.store("books").selectBook(id);
         this.getBookObj(response);
     },
 
+    // Prépare la modification d’un livre
     async editBook(id) {
         this.selectedOption = "Edit";
         const response = await Alpine.store("books").selectBook(id);
         this.getBookObj(response);
     },
 
+    // Met à jour un livre existant
     async updateBook() {
         const book = this.newBookObj();
         const response = await Alpine.store("books").updateBook(book);
@@ -136,6 +152,7 @@ export default () => ({
         }
     },
 
+    // Supprime un livre avec confirmation SweetAlert2
     async deleteBook(id) {
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
@@ -170,9 +187,8 @@ export default () => ({
         }
     },
 
+    // Applique les filtres de recherche
     async sendFilters() {
         await Alpine.store("books").loadBooks(this.filters);
     },
 });
-
-

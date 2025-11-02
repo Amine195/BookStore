@@ -1,38 +1,27 @@
+import { ROUTES } from "../constants/routes.js";
+import { sendRequest } from "../utils/httpClient.js";
+
 export default {
+    // Liste des livres
     booksList: [],
 
-    async sendRequest(url, method, data) {
-        try {
-            const result = await fetch(url, {
-                method,
-                headers: { "Content-Type": "application/json; charset=UTF-8" },
-                body: JSON.stringify(data)
-            });
-            if (!result.ok) throw new Error(`Erreur HTTP ${result.status}`);
-            return await result.json();
-        } catch (error) {
-            console.error("Erreur dans sendRequest :", error);
-            throw error;
-        }
-    },
-
     async loadBooks(data) {
-        this.booksList = await this.sendRequest("http://localhost:8080/book/listJsonFormat", "POST", data);
+        this.booksList = await sendRequest(ROUTES.booksLoad, data);
     },
 
     async saveBook(book) {
-        return await this.sendRequest("http://localhost:8080/book/add", "POST", book);
+        return await sendRequest(ROUTES.bookSave, book);
     },
 
     async selectBook(id) {
-        return await this.sendRequest("http://localhost:8080/book/get", "POST", { id });
+        return await sendRequest(ROUTES.bookSelect, { id });
     },
 
     async updateBook(book) {
-        return await this.sendRequest("http://localhost:8080/book/update", "POST", book);
+        return await sendRequest(ROUTES.bookUpdate, book);
     },
 
     async deleteBook(id) {
-        return await this.sendRequest("http://localhost:8080/book/delete", "POST", { id });
+        return await sendRequest(ROUTES.bookDelete, { id });
     }
 };

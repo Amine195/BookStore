@@ -1,3 +1,5 @@
+import { ROUTES } from "../constants/routes.js";
+
 export default () => ({
     username: "",
     password: "",
@@ -35,7 +37,7 @@ export default () => ({
                 this.responseMsgText = "The password is correct. redirection...";
 
                 await new Promise(resolve => setTimeout(resolve, 1000));
-                window.location.href = "http://localhost:8080/book";
+                window.location.href = ROUTES.books;
             }
         } catch (error) {
             console.error("Erreur dans submitForm :", error);

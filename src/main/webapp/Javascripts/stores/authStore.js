@@ -1,37 +1,24 @@
+import { ROUTES } from "../constants/routes.js";
+import { sendRequest } from "../utils/httpClient.js";
+
 export default {
-    async sendRequest(url, method = "GET", data = null) {
-        try {
-            const options = {
-                method,
-                headers: { "Content-Type": "application/json; charset=UTF-8" }
-            };
-
-            if (data) {
-                options.body = JSON.stringify(data);
-            }
-
-            const result = await fetch(url, options);
-            if (!result.ok) throw new Error(`Erreur HTTP ${result.status}`);
-
-            const response = await result.json();
-            return response;
-        } catch (error) {
-            console.error("Erreur dans sendRequest :", error);
-            throw error;
-        }
-    },
-
     async login(data) {
-        return await this.sendRequest("http://localhost:8080/auth/login", "POST", data);
+        return await sendRequest(ROUTES.authLogin, data);
     },
 
     async logout() {
-        const response = await this.sendRequest("http://localhost:8080/auth/logout", "POST");
-        
-        if (response.success) {
-            window.location.href = "http://localhost:8080/connection";
-        } else {
-            console.error("Logout failed");
+        try {
+            const response = await sendRequest(ROUTES.authLogout);
+
+            // Si le serveur confirme la déconnexion → redirige vers la page de connexion
+            if (response?.success) {
+                window.location.href = ROUTES.connection;
+            } else {
+                console.error("Échec de la déconnexion :", response);
+            }
+        } catch (error) {
+            // Gestion des erreurs de déconnexion
+            console.error("Erreur pendant la déconnexion :", error);
         }
     }
 };
