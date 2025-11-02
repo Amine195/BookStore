@@ -167,7 +167,7 @@ export default () => ({
                     confirmButtonColor: '#8EBE79'
                 });
 
-                this.resetBook();
+                this.selectedOption = "Details";
             }
         } catch (error) {
             console.error("Erreur dans updateBook :", error);
