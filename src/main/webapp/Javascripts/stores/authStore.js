@@ -1,16 +1,18 @@
+const BASE_URL = "http://localhost:8080";
+
 export default {
-    async sendRequest(url, method = "GET", data = null) {
+    async sendRequest(path, method = "GET", data = null) {
         try {
             const options = {
                 method,
                 headers: { "Content-Type": "application/json; charset=UTF-8" }
             };
 
-            if (data) {
+            if (data && method !== "GET") {
                 options.body = JSON.stringify(data);
             }
 
-            const result = await fetch(url, options);
+            const result = await fetch(`${BASE_URL}${path}`, options);
             if (!result.ok) throw new Error(`Erreur HTTP ${result.status}`);
 
             const response = await result.json();
@@ -22,14 +24,14 @@ export default {
     },
 
     async login(data) {
-        return await this.sendRequest("http://localhost:8080/auth/login", "POST", data);
+        return await this.sendRequest("/auth/login", "POST", data);
     },
 
     async logout() {
-        const response = await this.sendRequest("http://localhost:8080/auth/logout", "POST");
-        
+        const response = await this.sendRequest("/auth/logout", "POST");
+
         if (response.success) {
-            window.location.href = "http://localhost:8080/connection";
+            window.location.href = `${BASE_URL}/connection`;
         } else {
             console.error("Logout failed");
         }

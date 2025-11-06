@@ -20,25 +20,26 @@ export default () => ({
                 isAdmin: this.isAdmin
             });
 
-            if(response == false) {
+            if (response === false) {
                 this.responseIsValid = false;
                 this.responseMsgText = "The password is incorrect";
 
-                this. username = "";
                 this.password = "";
                 this.isAdmin = false;
 
-                this.isLoading = false;
-
-            } else if(response == true) {
+            } else if (response === true) {
                 this.responseIsValid = true;
                 this.responseMsgText = "The password is correct. redirection...";
 
                 await new Promise(resolve => setTimeout(resolve, 1000));
-                window.location.href = "http://localhost:8080/book";
+                window.location.href = `${window.location.origin}/book`;
             }
         } catch (error) {
             console.error("Erreur dans submitForm :", error);
+            this.responseIsValid = false;
+            this.responseMsgText = "An unexpected error occurred. Please try again.";
+        } finally {
+            this.isLoading = false;
         }
     },
 

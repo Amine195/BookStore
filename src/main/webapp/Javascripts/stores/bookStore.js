@@ -1,13 +1,20 @@
+const BASE_URL = "http://localhost:8080";
+
 export default {
     booksList: [],
 
-    async sendRequest(url, method, data) {
+    async sendRequest(path, method = "POST", data = null) {
         try {
-            const result = await fetch(url, {
+            const options = {
                 method,
-                headers: { "Content-Type": "application/json; charset=UTF-8" },
-                body: JSON.stringify(data)
-            });
+                headers: { "Content-Type": "application/json; charset=UTF-8" }
+            };
+
+            if (data !== null && method !== "GET") {
+                options.body = JSON.stringify(data);
+            }
+
+            const result = await fetch(`${BASE_URL}${path}`, options);
             if (!result.ok) throw new Error(`Erreur HTTP ${result.status}`);
             return await result.json();
         } catch (error) {
@@ -17,22 +24,22 @@ export default {
     },
 
     async loadBooks(data) {
-        this.booksList = await this.sendRequest("http://localhost:8080/book/listJsonFormat", "POST", data);
+        this.booksList = await this.sendRequest("/book/listJsonFormat", "POST", data);
     },
 
     async saveBook(book) {
-        return await this.sendRequest("http://localhost:8080/book/add", "POST", book);
+        return await this.sendRequest("/book/add", "POST", book);
     },
 
     async selectBook(id) {
-        return await this.sendRequest("http://localhost:8080/book/get", "POST", { id });
+        return await this.sendRequest("/book/get", "POST", { id });
     },
 
     async updateBook(book) {
-        return await this.sendRequest("http://localhost:8080/book/update", "POST", book);
+        return await this.sendRequest("/book/update", "POST", book);
     },
 
     async deleteBook(id) {
-        return await this.sendRequest("http://localhost:8080/book/delete", "POST", { id });
+        return await this.sendRequest("/book/delete", "POST", { id });
     }
 };

@@ -60,7 +60,9 @@ export default () => ({
         this.bookTitle = response.title;
         this.bookAuthor = response.author;
         this.bookPublisher = response.publisher;
-        this.bookPublicationDate = new Date(response.publicationDate).toISOString().slice(0, 10);
+        this.bookPublicationDate = response.publicationDate
+            ? new Date(response.publicationDate).toISOString().slice(0, 10)
+            : "";
         this.bookCategory = response.category;
         this.bookLanguage = response.language;
         this.bookPages = response.pages;
@@ -72,8 +74,12 @@ export default () => ({
 
     // Méthods
     async init() {
-        await Alpine.store("books").loadBooks(this.filters);
-        setTimeout(() => this.isLoading = false, 1000);
+        this.isLoading = true;
+        try {
+            await Alpine.store("books").loadBooks(this.filters);
+        } finally {
+            this.isLoading = false;
+        }
     },
 
     async submitForm() {
@@ -91,15 +97,16 @@ export default () => ({
 
     async addBook() {
         const book = this.newBookObj();
+        const title = this.bookTitle;
         const response = await Alpine.store("books").saveBook(book);
 
-        if(response) {
+        if (response) {
             await Alpine.store("books").loadBooks(this.filters);
             this.resetBook();
 
             Swal.fire({
                 title: "Add Book",
-                html: `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was added successfully`,
+                html: `The book <strong style="color:#8EBE79">${title}</strong> was added successfully`,
                 icon: "success",
                 confirmButtonColor: '#8EBE79'
             });
@@ -120,14 +127,15 @@ export default () => ({
 
     async updateBook() {
         const book = this.newBookObj();
+        const title = this.bookTitle;
         const response = await Alpine.store("books").updateBook(book);
 
-        if(response) {
+        if (response) {
             await Alpine.store("books").loadBooks(this.filters);
 
             Swal.fire({
                 title: "Update Book",
-                html: `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was updated successfully`,
+                html: `The book <strong style="color:#8EBE79">${title}</strong> was updated successfully`,
                 icon: "success",
                 confirmButtonColor: '#8EBE79'
             });
@@ -171,7 +179,12 @@ export default () => ({
     },
 
     async sendFilters() {
-        await Alpine.store("books").loadBooks(this.filters);
+        this.isLoading = true;
+        try {
+            await Alpine.store("books").loadBooks(this.filters);
+        } finally {
+            this.isLoading = false;
+        }
     },
 });
 
