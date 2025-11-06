@@ -1,5 +1,6 @@
+import { handleAsyncWrapperBook } from "../utils/helpers.js";
+
 export default () => ({
-    // État global du composant
     selectedOption: "Details",
     isLoading: true,
     
@@ -10,7 +11,6 @@ export default () => ({
         enStock: []
     },
 
-    // Propriétés d’un livre
     bookId: null,
     bookTitle: "",
     bookAuthor: "",
@@ -24,7 +24,6 @@ export default () => ({
     bookPrice: null,
     bookDescription: "",
 
-    // Méthodes utilitaires
     resetBook() {
         this.bookId = null;
         this.bookTitle = "";
@@ -75,151 +74,107 @@ export default () => ({
         this.bookPrice = response.price ?? null;
         this.bookDescription = response.description ?? "";
     },
+    
+    init: handleAsyncWrapperBook(async function () {
+        await Alpine.store("books").loadBooks(this.filters);
+        setTimeout(() => (this.isLoading = false), 1000);
+    }, "Erreur lors de l'initialisation"),
 
-    // Initialise la liste des livres et gère le loader
-    async init() {
-        try {
-            await Alpine.store("books").loadBooks(this.filters);
-        } catch (error) {
-            console.error("Erreur lors du chargement des livres :", error);
-        } finally {
-            setTimeout(() => (this.isLoading = false), 1000);
-        }
-    },
-
-    // Soumet le formulaire selon le mode actuel (ajout ou modification)
-    async submitForm() {
-        try {
-            if (this.selectedOption === "New") {
-                await this.addBook();
-            } else if (this.selectedOption === "Edit") {
-                await this.updateBook();
-            }
-        } catch (error) {
-            console.error("Erreur dans submitForm :", error);
-        }
-    },
-
-    // Prépare le formulaire pour un nouveau livre
-    newBook() {
+    newBook: function() {
         this.selectedOption = "New";
         this.resetBook();
     },
 
-    // Ajoute un nouveau livre
-    async addBook() {
-        try {
-            const book = this.newBookObj();
-            const response = await Alpine.store("books").saveBook(book);
+    addBook: handleAsyncWrapperBook(async function () {
+        const book = this.newBookObj();
+        const response = await Alpine.store("books").saveBook(book);
 
-            if(response) {
-                await Alpine.store("books").loadBooks(this.filters);
-                this.resetBook();
+        if(response) {
+            await Alpine.store("books").loadBooks(this.filters);
+            this.resetBook();
 
-                Swal.fire({
-                    title: "Add Book",
-                    html: `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was added successfully`,
-                    icon: "success",
-                    confirmButtonColor: '#8EBE79'
-                });
-            }
-        } catch (error) {
-            console.error("Erreur dans addBook :", error);
-        }
-        
-    },
+            Swal.fire({
+                title: "Add Book",
+                html: `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was added successfully`,
+                icon: "success",
+                confirmButtonColor: '#8EBE79'
+            });
+        }   
+    }, "Erreur dans addBook"),
 
-    // Affiche les détails d’un livre
-    async showBookDetails(id) {
-        try {
-            this.selectedOption = "Details";
-            const response = await Alpine.store("books").selectBook(id);
-            this.getBookObj(response);
-        } catch (error) {
-            console.error("Erreur dans showBookDetails :", error);
-        }
-    },
+    showBookDetails: handleAsyncWrapperBook(async function (id) {
+        this.selectedOption = "Details";
+        const response = await Alpine.store("books").selectBook(id);
+        this.getBookObj(response);
+    }, "Erreur dans showBookDetails"),
 
-    // Prépare la modification d’un livre
-    async editBook(id) {
-        try {
+     editBook: handleAsyncWrapperBook(async function (id) {
             this.selectedOption = "Edit";
             const response = await Alpine.store("books").selectBook(id);
             this.getBookObj(response);
-        } catch (error) {
-            console.error("Erreur dans editBook :", error);
-        }
-    },
+    }, "Erreur dans editBook"),
 
-    // Met à jour un livre existant
-    async updateBook() {
-        try {
-            const book = this.newBookObj();
-            const response = await Alpine.store("books").updateBook(book);
+    updateBook: handleAsyncWrapperBook(async function () {
+        const book = this.newBookObj();
+        const response = await Alpine.store("books").updateBook(book);
 
-            if(response) {
-                await Alpine.store("books").loadBooks(this.filters);
-
-                Swal.fire({
-                    title: "Update Book",
-                    html: `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was updated successfully`,
-                    icon: "success",
-                    confirmButtonColor: '#8EBE79'
-                });
-
-                this.selectedOption = "Details";
-            }
-        } catch (error) {
-            console.error("Erreur dans updateBook :", error);
-        }
-    },
-
-    // Supprime un livre avec confirmation SweetAlert2
-    async deleteBook(id) {
-        try {
-            const swalWithBootstrapButtons = Swal.mixin({
-                customClass: {
-                    confirmButton: "btn btn-success",
-                    cancelButton: "btn btn-danger"
-                },
-                buttonsStyling: false
-            });
-
-            const result = await swalWithBootstrapButtons.fire({
-                title: "Are you sure?",
-                text: "This action is irreversible.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Yes, delete it!",
-                cancelButtonText: "No, cancel!",
-                reverseButtons: true
-            });
-
-            if (result.isConfirmed) {
-                const response = await Alpine.store("books").deleteBook(id);
-
-                if (response) {
-                    await Alpine.store("books").loadBooks(this.filters);
-                    swalWithBootstrapButtons.fire({
-                        title: "Deleted!",
-                        text: "The book has been successfully deleted.",
-                        icon: "success",
-                        confirmButtonColor: "#8EBE79"
-                    });
-                }
-            }
-        } catch (error) {
-            console.error("Erreur dans deleteBook :", error);
-        }
-        
-    },
-
-    // Applique les filtres de recherche
-    async sendFilters() {
-        try {
+        if(response) {
             await Alpine.store("books").loadBooks(this.filters);
-        } catch (error) {
-            console.error("Erreur dans sendFilters :", error);
+
+            Swal.fire({
+                title: "Update Book",
+                html: `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was updated successfully`,
+                icon: "success",
+                confirmButtonColor: '#8EBE79'
+            });
+
+            this.selectedOption = "Details";
         }
-    },
+    }, "Erreur dans updateBook"),
+
+    deleteBook: handleAsyncWrapperBook(async function (id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: false
+        });
+
+        const result = await swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: "This action is irreversible.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+            const response = await Alpine.store("books").deleteBook(id);
+
+            if (response) {
+                await Alpine.store("books").loadBooks(this.filters);
+                swalWithBootstrapButtons.fire({
+                    title: "Deleted!",
+                    text: "The book has been successfully deleted.",
+                    icon: "success",
+                    confirmButtonColor: "#8EBE79"
+                });
+            }
+        }    
+    }, "Erreur dans deleteBook"),
+    
+    submitForm: handleAsyncWrapperBook(async function () {
+        if (this.selectedOption === "New") {
+            await this.addBook();
+        } else if (this.selectedOption === "Edit") {
+            await this.updateBook();
+        }
+    }, "Erreur dans submitForm"),
+
+    sendFilters: handleAsyncWrapperBook(async function () {
+        await Alpine.store("books").loadBooks(this.filters);
+    }, "Erreur dans sendFilters")
 });

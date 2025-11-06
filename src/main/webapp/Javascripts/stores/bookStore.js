@@ -5,23 +5,23 @@ export default {
     // Liste des livres
     booksList: [],
 
-    async loadBooks(data) {
+    loadBooks: async function (data) {
         this.booksList = await sendRequest(ROUTES.booksLoad, data);
     },
-
-    async saveBook(book) {
+    
+    saveBook: async function (book) {
         return await sendRequest(ROUTES.bookSave, book);
     },
 
-    async selectBook(id) {
+    selectBook: async function (id) {
         return await sendRequest(ROUTES.bookSelect, { id });
     },
 
-    async updateBook(book) {
+    updateBook: async function (book) {
         return await sendRequest(ROUTES.bookUpdate, book);
     },
 
-    async deleteBook(id) {
+    deleteBook: async function (id) {
         return await sendRequest(ROUTES.bookDelete, { id });
     }
 };

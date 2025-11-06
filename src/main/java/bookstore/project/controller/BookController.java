@@ -4,7 +4,6 @@ import bookstore.project.beans.Book;
 import bookstore.project.dao.BookDAO;
 import bookstore.project.dao.IBookDAO;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import java.io.BufferedReader;
@@ -78,16 +77,11 @@ public class BookController extends HttpServlet {
         response.setContentType("application/json; charset=UTF-8");
         
         try
-        {
-            StringBuilder sb = new StringBuilder();
-            BufferedReader reader = request.getReader();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
+        {          
+            String body = readRequestBody(request);
             
             Gson gson = new Gson();
-            JsonObject json = gson.fromJson(sb.toString(), JsonObject.class);
+            JsonObject json = gson.fromJson(body, JsonObject.class);
 
             String title = json.get("title").getAsString();
             String author = json.get("author").getAsString();
@@ -124,15 +118,10 @@ public class BookController extends HttpServlet {
         
         try
         {
-            StringBuilder sb = new StringBuilder();
-            BufferedReader reader = request.getReader();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
+            String body = readRequestBody(request);
             
             Gson gson = new Gson();
-            JsonObject json = gson.fromJson(sb.toString(), JsonObject.class);
+            JsonObject json = gson.fromJson(body, JsonObject.class);
             
             int id = json.get("id").getAsInt();
             String title = json.get("title").getAsString();
@@ -168,15 +157,11 @@ public class BookController extends HttpServlet {
         response.setContentType("application/json; charset=UTF-8");
 
         try {
-            StringBuilder sb = new StringBuilder();
-            BufferedReader reader = request.getReader();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
+            String body = readRequestBody(request);
 
             Gson gson = new Gson();
-            JsonObject json = gson.fromJson(sb.toString(), JsonObject.class);
+            JsonObject json = gson.fromJson(body, JsonObject.class);
+            
             int id = json.get("id").getAsInt();
             
             boolean status = bookDAO.deleteBook(id);
@@ -207,15 +192,10 @@ public class BookController extends HttpServlet {
         try {
             List<Book> books = bookDAO.getAllBooks();
             
-            StringBuilder sb = new StringBuilder();
-            BufferedReader reader = request.getReader();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
+            String body = readRequestBody(request);
 
             Gson gson = new Gson();
-            JsonObject json = gson.fromJson(sb.toString(), JsonObject.class);
+            JsonObject json = gson.fromJson(body, JsonObject.class);
             
             JsonArray categories = json.getAsJsonArray("categories");
             JsonArray format = json.getAsJsonArray("format");
@@ -261,15 +241,11 @@ public class BookController extends HttpServlet {
         response.setContentType("application/json; charset=UTF-8");
 
         try {
-            StringBuilder sb = new StringBuilder();
-            BufferedReader reader = request.getReader();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
+            String body = readRequestBody(request);
 
             Gson gson = new Gson();
-            JsonObject json = gson.fromJson(sb.toString(), JsonObject.class);
+            JsonObject json = gson.fromJson(body, JsonObject.class);
+            
             int id = json.get("id").getAsInt();
             
             Book book = bookDAO.getBook(id);
@@ -281,6 +257,18 @@ public class BookController extends HttpServlet {
             e.printStackTrace();
         }
     }
+    
+    private String readRequestBody(HttpServletRequest request) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        try (BufferedReader reader = request.getReader()) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        }
+        return sb.toString();
+    }
+
     
     private boolean contains(JsonArray array, String value) {
         for (int i = 0; i < array.size(); i++) {
