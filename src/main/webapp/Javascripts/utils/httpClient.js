@@ -1,6 +1,5 @@
 export async function sendRequest(url, data = null) {
     try {
-        // Configuration de la requête HTTP
         const options = {
             method: "POST",
             headers: {
@@ -8,20 +7,16 @@ export async function sendRequest(url, data = null) {
             }
         };
 
-        // Si des données sont fournies, on les ajoute au corps
         if (data) {
             options.body = JSON.stringify(data);
         }
 
-        // Envoi de la requête
         const result = await fetch(url, options);
 
-        // Vérifie le statut HTTP
         if (!result.ok) {
             throw new Error(`Erreur HTTP ${result.status} sur ${url}`);
         }
 
-        // Tentative de lecture de la réponse JSON
         let response = null;
         try {
             response = await result.json();

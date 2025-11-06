@@ -2,7 +2,6 @@ import { ROUTES } from "../constants/routes.js";
 import { sendRequest } from "../utils/httpClient.js";
 
 export default {
-    // Liste des livres
     booksList: [],
 
     loadBooks: async function (data) {

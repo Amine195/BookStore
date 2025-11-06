@@ -72,7 +72,6 @@ public class BookController extends HttpServlet {
 
     private void addNewBook(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
         
@@ -98,11 +97,21 @@ public class BookController extends HttpServlet {
             Date publicationDate = Date.valueOf(publicationDateStr);
             
             Book newBook = new Book(
-                title, author, publisher, publicationDate, category,
-                language, pages, format, price, stock, description
+                title,
+                author,
+                publisher,
+                publicationDate,
+                category,
+                language,
+                pages,
+                format,
+                price,
+                stock,
+                description
             );
             
             boolean status = bookDAO.addBook(newBook);
+            
             String jsonResponse = gson.toJson(status);
             response.getWriter().write(jsonResponse);
 
@@ -112,7 +121,6 @@ public class BookController extends HttpServlet {
     }
 
     private void updateBook(HttpServletRequest request, HttpServletResponse response) {
-        
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
         
@@ -139,11 +147,22 @@ public class BookController extends HttpServlet {
             Date publicationDate = Date.valueOf(publicationDateStr);
             
             Book updatedBook = new Book(
-                id, title, author, publisher, publicationDate, category,
-                language, pages, format, price, stock, description
+                id,
+                title,
+                author,
+                publisher,
+                publicationDate,
+                category,
+                language,
+                pages,
+                format,
+                price,
+                stock,
+                description
             );
             
             boolean status = bookDAO.updateBook(updatedBook);
+            
             String jsonResponse = gson.toJson(status);
             response.getWriter().write(jsonResponse);
             
@@ -165,6 +184,7 @@ public class BookController extends HttpServlet {
             int id = json.get("id").getAsInt();
             
             boolean status = bookDAO.deleteBook(id);
+            
             String jsonResponse = gson.toJson(status);
             response.getWriter().write(jsonResponse);
 
