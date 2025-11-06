@@ -1,6 +1,6 @@
 <%@ include file="/Partials/header.jsp" %>
 
-<main x-data="bookApp" class="container mt-4">
+<main x-data="book" class="container mt-4">
     <%@ include file="/Includes/breadcrumb.jsp" %>
         
     <section class="row">

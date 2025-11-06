@@ -23,6 +23,20 @@ export default () => ({
     bookStock: null,
     bookPrice: null,
     bookDescription: "",
+    
+    errors: {
+        title: null,
+        author: null,
+        publisher: null,
+        publicationDate: null,
+        category: null,
+        language: null,
+        pages: null,
+        format: null,
+        stock: null,
+        price: null,
+        description: null
+    },
 
     resetBook() {
         this.bookId = null;
@@ -75,6 +89,75 @@ export default () => ({
         this.bookDescription = response.description ?? "";
     },
     
+    clearErrors() {
+        for (const key in this.errors) {
+            this.errors[key] = null;
+        }
+    },
+    
+    validateBook() {
+        this.clearErrors();
+        let valid = true;
+
+        if (!this.bookTitle || this.bookTitle.trim().length < 2) {
+            this.errors.title = "Le titre doit contenir au moins 2 caractères.";
+            valid = false;
+        }
+
+        if (!this.bookAuthor || this.bookAuthor.trim().length < 2) {
+            this.errors.author = "L'auteur doit contenir au moins 2 caractères.";
+            valid = false;
+        }
+
+        if (!this.bookPublisher || this.bookPublisher.trim().length < 2) {
+            this.errors.publisher = "L'éditeur est obligatoire.";
+            valid = false;
+        }
+
+        if (!this.bookPublicationDate) {
+            this.errors.publicationDate = "La date de publication est obligatoire.";
+            valid = false;
+        }
+
+        if (!this.bookCategory) {
+            this.errors.category = "Veuillez sélectionner une catégorie.";
+            valid = false;
+        }
+
+        if (!this.bookLanguage) {
+            this.errors.language = "Veuillez sélectionner une langue.";
+            valid = false;
+        }
+
+        if (!this.bookPages || this.bookPages <= 0) {
+            this.errors.pages = "Le nombre de pages doit être supérieur à 0.";
+            valid = false;
+        }
+
+        if (!this.bookFormat) {
+            this.errors.format = "Veuillez sélectionner un format.";
+            valid = false;
+        }
+
+        if (this.bookStock === null || this.bookStock < 0) {
+            this.errors.stock = "Le stock doit être un nombre ≥ 0.";
+            valid = false;
+        }
+
+        if (!this.bookPrice || this.bookPrice <= 0) {
+            this.errors.price = "Le prix doit être supérieur à 0.";
+            valid = false;
+        }
+
+        if (!this.bookDescription || this.bookDescription.trim().length < 10) {
+            this.errors.description = "La description doit contenir au moins 10 caractères.";
+            valid = false;
+        }
+
+        return valid;
+    },
+
+    
     init: handleAsyncWrapperBook(async function () {
         await Alpine.store("books").loadBooks(this.filters);
         setTimeout(() => (this.isLoading = false), 1000);
@@ -103,15 +186,16 @@ export default () => ({
     }, "Erreur dans addBook"),
 
     showBookDetails: handleAsyncWrapperBook(async function (id) {
-        this.selectedOption = "Details";
         const response = await Alpine.store("books").selectBook(id);
         this.getBookObj(response);
+        this.selectedOption = "Details";
     }, "Erreur dans showBookDetails"),
 
      editBook: handleAsyncWrapperBook(async function (id) {
-            this.selectedOption = "Edit";
             const response = await Alpine.store("books").selectBook(id);
             this.getBookObj(response);
+            this.clearErrors();
+            this.selectedOption = "Edit";    
     }, "Erreur dans editBook"),
 
     updateBook: handleAsyncWrapperBook(async function () {
@@ -167,6 +251,8 @@ export default () => ({
     }, "Erreur dans deleteBook"),
     
     submitForm: handleAsyncWrapperBook(async function () {
+        if (!this.validateBook()) return;
+        
         if (this.selectedOption === "New") {
             await this.addBook();
         } else if (this.selectedOption === "Edit") {

@@ -26,7 +26,10 @@
                     name="username" 
                     x-model="username"
                     @input="handleInput"
-                    required>
+                    >
+                <div class="text-danger small" x-show="errors.username">
+                    <small x-text="errors.username"></small>
+                </div>
             </div>
             
             <div class="mb-3">
@@ -39,7 +42,10 @@
                     x-model="password"
                     @input="handleInput"
                     aria-describedby="passwordHelpBlock"
-                    required>
+                    >
+                <div class="text-danger small" x-show="errors.password">
+                    <small x-text="errors.password"></small>
+                </div>
                 <div id="passwordHelpBlock" class="form-text">
                     <small>The password is asdf.</small>
                 </div>
