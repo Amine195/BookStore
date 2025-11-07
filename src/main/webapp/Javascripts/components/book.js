@@ -1,8 +1,20 @@
 import { handleAsyncWrapperBook } from "../utils/helpers.js";
+import {
+    createEmptyBook,
+    createEmptyErrors,
+    formatBookFromResponse 
+} from '../utils/bookModel.js';
+import { validateBook } from '../utils/bookValidator.js';
+import { 
+    showSuccessNotification, 
+    showDeleteConfirmation 
+} from '../utils/notifications.js';
 
 export default () => ({
     selectedOption: "Details",
     isLoading: true,
+    
+    ...createEmptyBook(),
     
     filters: {
         categories: [],
@@ -10,50 +22,14 @@ export default () => ({
         langue: [],
         enStock: []
     },
-
-    bookId: null,
-    bookTitle: "",
-    bookAuthor: "",
-    bookPublisher: "",
-    bookPublicationDate: "",
-    bookCategory: "",
-    bookLanguage: "",
-    bookPages: null,
-    bookFormat: "",
-    bookStock: null,
-    bookPrice: null,
-    bookDescription: "",
     
-    errors: {
-        title: null,
-        author: null,
-        publisher: null,
-        publicationDate: null,
-        category: null,
-        language: null,
-        pages: null,
-        format: null,
-        stock: null,
-        price: null,
-        description: null
-    },
+    errors: createEmptyErrors(),
 
     resetBook() {
-        this.bookId = null;
-        this.bookTitle = "";
-        this.bookAuthor = "";
-        this.bookPublisher = "";
-        this.bookPublicationDate = "";
-        this.bookCategory = "";
-        this.bookLanguage = "";
-        this.bookPages = null;
-        this.bookFormat = "";
-        this.bookStock = null;
-        this.bookPrice = null;
-        this.bookDescription = "";
+        Object.assign(this, createEmptyBook());
     },
 
-    newBookObj() {
+    getCurrentBook() {
         return {
             id: this.bookId,
             title: this.bookTitle,
@@ -70,93 +46,22 @@ export default () => ({
         };
     },
 
-    getBookObj(response) {
-        if (!response) return;
-
-        this.bookId = response.id ?? null;
-        this.bookTitle = response.title ?? "";
-        this.bookAuthor = response.author ?? "";
-        this.bookPublisher = response.publisher ?? "";
-        this.bookPublicationDate = response.publicationDate
-            ? new Date(response.publicationDate).toISOString().slice(0, 10)
-            : "";
-        this.bookCategory = response.category ?? "";
-        this.bookLanguage = response.language ?? "";
-        this.bookPages = response.pages ?? null;
-        this.bookFormat = response.format ?? "";
-        this.bookStock = response.stock ?? null;
-        this.bookPrice = response.price ?? null;
-        this.bookDescription = response.description ?? "";
+    setBook(response) {
+        const book = formatBookFromResponse(response);
+        Object.assign(this, book);
     },
     
     clearErrors() {
-        for (const key in this.errors) {
+        Object.keys(this.errors).forEach(key => {
             this.errors[key] = null;
-        }
+        });
     },
     
-    validateBook() {
-        this.clearErrors();
-        let valid = true;
-
-        if (!this.bookTitle || this.bookTitle.trim().length < 2) {
-            this.errors.title = "Le titre doit contenir au moins 2 caractères.";
-            valid = false;
-        }
-
-        if (!this.bookAuthor || this.bookAuthor.trim().length < 2) {
-            this.errors.author = "L'auteur doit contenir au moins 2 caractères.";
-            valid = false;
-        }
-
-        if (!this.bookPublisher || this.bookPublisher.trim().length < 2) {
-            this.errors.publisher = "L'éditeur est obligatoire.";
-            valid = false;
-        }
-
-        if (!this.bookPublicationDate) {
-            this.errors.publicationDate = "La date de publication est obligatoire.";
-            valid = false;
-        }
-
-        if (!this.bookCategory) {
-            this.errors.category = "Veuillez sélectionner une catégorie.";
-            valid = false;
-        }
-
-        if (!this.bookLanguage) {
-            this.errors.language = "Veuillez sélectionner une langue.";
-            valid = false;
-        }
-
-        if (!this.bookPages || this.bookPages <= 0) {
-            this.errors.pages = "Le nombre de pages doit être supérieur à 0.";
-            valid = false;
-        }
-
-        if (!this.bookFormat) {
-            this.errors.format = "Veuillez sélectionner un format.";
-            valid = false;
-        }
-
-        if (this.bookStock === null || this.bookStock < 0) {
-            this.errors.stock = "Le stock doit être un nombre ≥ 0.";
-            valid = false;
-        }
-
-        if (!this.bookPrice || this.bookPrice <= 0) {
-            this.errors.price = "Le prix doit être supérieur à 0.";
-            valid = false;
-        }
-
-        if (!this.bookDescription || this.bookDescription.trim().length < 10) {
-            this.errors.description = "La description doit contenir au moins 10 caractères.";
-            valid = false;
-        }
-
+    validateCurrentBook() {
+        const { valid, errors } = validateBook(this.getCurrentBook());
+        this.errors = errors;
         return valid;
     },
-
     
     init: handleAsyncWrapperBook(async function () {
         await Alpine.store("books").loadBooks(this.filters);
@@ -166,92 +71,72 @@ export default () => ({
     newBook: function() {
         this.selectedOption = "New";
         this.resetBook();
+        this.clearErrors();
     },
 
     addBook: handleAsyncWrapperBook(async function () {
-        const book = this.newBookObj();
+        const book = this.getCurrentBook();
         const response = await Alpine.store("books").saveBook(book);
 
         if(response) {
             await Alpine.store("books").loadBooks(this.filters);
+            
+            await showSuccessNotification(
+                "Add Book",
+                `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was added successfully`
+            );
+            
             this.resetBook();
-
-            Swal.fire({
-                title: "Add Book",
-                html: `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was added successfully`,
-                icon: "success",
-                confirmButtonColor: '#8EBE79'
-            });
         }   
     }, "Erreur dans addBook"),
 
     showBookDetails: handleAsyncWrapperBook(async function (id) {
         const response = await Alpine.store("books").selectBook(id);
-        this.getBookObj(response);
+        this.setBook(response);
         this.selectedOption = "Details";
     }, "Erreur dans showBookDetails"),
 
-     editBook: handleAsyncWrapperBook(async function (id) {
+    editBook: handleAsyncWrapperBook(async function (id) {
             const response = await Alpine.store("books").selectBook(id);
-            this.getBookObj(response);
+            this.setBook(response);
             this.clearErrors();
             this.selectedOption = "Edit";    
     }, "Erreur dans editBook"),
 
     updateBook: handleAsyncWrapperBook(async function () {
-        const book = this.newBookObj();
+        const book = this.getCurrentBook();
         const response = await Alpine.store("books").updateBook(book);
 
         if(response) {
             await Alpine.store("books").loadBooks(this.filters);
 
-            Swal.fire({
-                title: "Update Book",
-                html: `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was updated successfully`,
-                icon: "success",
-                confirmButtonColor: '#8EBE79'
-            });
+            await showSuccessNotification(
+                "Update Book",
+                `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was updated successfully`
+            );
 
             this.selectedOption = "Details";
         }
     }, "Erreur dans updateBook"),
 
     deleteBook: handleAsyncWrapperBook(async function (id) {
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: "btn btn-success",
-                cancelButton: "btn btn-danger"
-            },
-            buttonsStyling: false
-        });
-
-        const result = await swalWithBootstrapButtons.fire({
-            title: "Are you sure?",
-            text: "This action is irreversible.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "No, cancel!",
-            reverseButtons: true
-        });
+        const result = await showDeleteConfirmation();
 
         if (result.isConfirmed) {
             const response = await Alpine.store("books").deleteBook(id);
 
             if (response) {
                 await Alpine.store("books").loadBooks(this.filters);
-                swalWithBootstrapButtons.fire({
-                    title: "Deleted!",
-                    text: "The book has been successfully deleted.",
-                    icon: "success",
-                    confirmButtonColor: "#8EBE79"
-                });
+                await showSuccessNotification(
+                    "Deleted!",
+                    "The book has been successfully deleted."
+                );
             }
         }    
     }, "Erreur dans deleteBook"),
     
     submitForm: handleAsyncWrapperBook(async function () {
-        if (!this.validateBook()) return;
+        if (!this.validateCurrentBook()) return;
         
         if (this.selectedOption === "New") {
             await this.addBook();

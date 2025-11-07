@@ -50,7 +50,6 @@ export default () => ({
         if(response == true) {
             this.responseIsValid = true;
             this.responseMsgText = "The password is correct. redirection...";
-            await new Promise(resolve => setTimeout(resolve, 500));
             this.isLoading = false;
             window.location.href = ROUTES.books;
         }
