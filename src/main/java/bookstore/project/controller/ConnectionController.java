@@ -11,7 +11,7 @@ public class ConnectionController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        request.getRequestDispatcher("Pages/connection/login.jsp").forward(request, response); 
+        request.getRequestDispatcher("login.jsp").forward(request, response); 
     }
 
     @Override

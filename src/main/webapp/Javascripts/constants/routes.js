@@ -18,5 +18,6 @@ export const ROUTES = {
     // Cart
     cartLoad: `${window.location.origin}/cart/load`,
     cartAdd: `${window.location.origin}/cart/add`,
-    cartDelete: `${window.location.origin}/cart/delete`
+    cartDelete: `${window.location.origin}/cart/delete`,
+    processFinish: `${window.location.origin}/cart/done`
 };

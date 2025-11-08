@@ -26,7 +26,7 @@
         
         <div>
             <div class="d-flex justify-content-between text-muted small">
-                <p class="mb-1">Sous-total :</p>
+                <p class="mb-1">Sous-total : </p>
                 <p class="mb-1"><span x-text="$store.books.subtotal.toFixed(2)"></span> CAD</p>
             </div>
             
@@ -49,7 +49,7 @@
           
             <c:choose>
                 <c:when test="${pageContext.request.servletPath == '/cart.jsp'}">                               
-                    <a class="btn btn-sm btn-success w-100" href="cart.jsp">Payement</a>
+                    <button class="btn btn-sm btn-success w-100" @click="processFinish()">Payement</button>
                 </c:when>
 
                 <c:otherwise>

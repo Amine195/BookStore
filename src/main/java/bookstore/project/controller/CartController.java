@@ -51,6 +51,10 @@ public class CartController extends HttpServlet {
                 deleteFromCart(request, response);
                 break;
                 
+            case "/done":
+                processFinish(request, response);
+                break;
+                
             default:
                 getCart(request, response);
                 break;
@@ -172,7 +176,30 @@ public class CartController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    } 
+    }
+    
+    private void processFinish(HttpServletRequest request, HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json; charset=UTF-8");
+
+        try {
+            // Récupérer la session
+            HttpSession session = request.getSession();
+
+            List<CartItem> emptyCart = new ArrayList<>();
+            session.setAttribute("cart", emptyCart);
+            
+            // Convertir en JSON
+            Gson gson = new Gson();
+            String json = gson.toJson(emptyCart);
+
+            // Envoyer la réponse JSON
+            response.getWriter().write(json);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private String readRequestBody(HttpServletRequest request) throws IOException {
         StringBuilder sb = new StringBuilder();

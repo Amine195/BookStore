@@ -5,6 +5,7 @@ import bookStore from "./stores/bookStore.js";
 
 import book from "./components/book.js";
 import login from "./components/login.js";
+import cart from "./components/cart.js";
 
 window.Alpine = Alpine;
 
@@ -14,6 +15,7 @@ document.addEventListener("alpine:init", () => {
 
     Alpine.data("book", book);
     Alpine.data("login", login);
+    Alpine.data("cart", cart);
 });
 
 Alpine.start();

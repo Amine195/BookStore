@@ -37,6 +37,11 @@ export default {
         this.booksCart = await sendRequest(ROUTES.cartDelete, { id });
     },
     
+    processFinish: async function () {
+        this.booksCart = await sendRequest(ROUTES.processFinish);
+        return this.booksCart.length;
+    },
+    
     handleAddToCart: async function(event, id) {
         const button = event.currentTarget;
         const rect = button.getBoundingClientRect();
