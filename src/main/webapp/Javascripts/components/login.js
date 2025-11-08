@@ -2,8 +2,8 @@ import { ROUTES } from "../constants/routes.js";
 import { handleAsyncWrapperAuth } from "../utils/helpers.js";
 
 export default () => ({
-    username: "Mohammed",
-    password: "asdf",
+    username: "",
+    password: "",
     isAdmin: false,
 
     isLoading: false,

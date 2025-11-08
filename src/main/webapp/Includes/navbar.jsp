@@ -19,12 +19,11 @@
                         </li>      
                     </ul>
                     
-                    <a class="nav-link d-flex align-items-center mt-1" href="profile.jsp">
+                    <a class="nav-link d-flex align-items-center mt-1" href="/profile">
                         <i class="bi bi-person-circle me-1"></i>
                         <span class="small">Bonjour ${sessionScope.username}</span>
                     </a>
 
-                    
                     <span class="mx-3"></span>
 
                     <c:if test="${sessionScope.role == 'USER'}">

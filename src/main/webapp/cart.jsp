@@ -20,7 +20,7 @@
                 <div class="loading-box my-4">
                     <span class="loading-text">Processing...</span>
                     <div class="loader my-4"></div>
-                    <a class="btn btn-sm btn-outline-primary px-4" href="/book">Revenir a la liste des books</a>
+                    <a class="btn btn-sm btn-outline-primary px-4" href="#">Revenir a la liste des books</a>
                 </div>
             </template>
             

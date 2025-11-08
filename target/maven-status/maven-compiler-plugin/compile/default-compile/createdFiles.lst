@@ -8,3 +8,4 @@ bookstore\project\controller\ConnectionController.class
 bookstore\project\dao\IBookDAO.class
 bookstore\project\beans\CartItem.class
 bookstore\project\db\DatabaseConnection.class
+bookstore\project\controller\ProfileController.class
