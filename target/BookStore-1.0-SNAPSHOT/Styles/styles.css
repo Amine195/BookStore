@@ -6,6 +6,15 @@ body {
     margin-top: 175px;
 }
 
+.sticky-top {
+    position: sticky; 
+    top: 100px;
+}
+
 .swal2-actions .btn {
     margin: 0 5px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }

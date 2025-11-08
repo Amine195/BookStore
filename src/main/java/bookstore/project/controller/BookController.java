@@ -36,7 +36,6 @@ public class BookController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getPathInfo();
-
         action = (action == null) ? "/list" : action;
         
         switch(action) {
@@ -288,7 +287,6 @@ public class BookController extends HttpServlet {
         }
         return sb.toString();
     }
-
     
     private boolean contains(JsonArray array, String value) {
         for (int i = 0; i < array.size(); i++) {

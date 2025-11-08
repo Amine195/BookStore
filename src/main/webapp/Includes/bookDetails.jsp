@@ -52,7 +52,7 @@
             </div>
             <div class="col-6">
                 <label class="fw-semibold text-body-tertiary mb-1">Price</label>
-                <p class="card-title mb-3" x-text="Number(bookPrice).toFixed(2) + ' CAD'"></p>
+                <p class="card-title mb-3" x-text="bookPrice.toFixed(2) + ' CAD'"></p>
             </div>
         </div>
         

@@ -17,7 +17,7 @@
                 <button class="btn btn-outline-primary btn-sm me-2" @click="showBookDetails(book.id)">
                     <i class="bi bi-arrow-repeat"></i> Details
                 </button>
-                <button class="btn btn-outline-success btn-sm">
+                <button class="btn btn-outline-success btn-sm" @click="addBookToCart(book.id)">
                     <i class="bi bi-plus"></i> Add to cart
                 </button>
             </div>

@@ -2,8 +2,8 @@ import { ROUTES } from "../constants/routes.js";
 import { handleAsyncWrapperAuth } from "../utils/helpers.js";
 
 export default () => ({
-    username: "",
-    password: "",
+    username: "Mohammed",
+    password: "asdf",
     isAdmin: false,
 
     isLoading: false,
@@ -50,7 +50,6 @@ export default () => ({
         if(response == true) {
             this.responseIsValid = true;
             this.responseMsgText = "The password is correct. redirection...";
-            this.isLoading = false;
             window.location.href = ROUTES.books;
         }
     }, "Erreur dans submitForm"),

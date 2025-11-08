@@ -1,5 +1,5 @@
 <header>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary fixed-top shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="/">
                 <img class="me-4" src="Images/logo.png" alt="Logo" width="200">
@@ -18,13 +18,36 @@
                             </a>
                         </li>      
                     </ul>
-
-                    <span class="d-inline-flex align-items-center mt-1">
+                    
+                    <a class="nav-link d-flex align-items-center mt-1" href="profile.jsp">
                         <i class="bi bi-person-circle me-1"></i>
                         <span class="small">Bonjour ${sessionScope.username}</span>
-                    </span>
+                    </a>
 
+                    
                     <span class="mx-3"></span>
+
+                    <c:if test="${sessionScope.role == 'USER'}">
+                        <c:choose>
+                            <c:when test="${pageContext.request.servletPath == '/profile.jsp'}">                               
+                                <a class="nav-link d-flex align-items-center mt-1" href="cart.jsp">
+                                    <i class="bi bi-cart me-1"></i>
+                                    <span class="badge text-bg-danger" x-text="$store.books.totalQuantity()"></span>
+                                </a>
+
+                                <span class="mx-2"></span>
+                            </c:when>
+
+                            <c:otherwise>
+                                <span class="cursor-pointer d-inline-flex align-items-center mt-1" @click="$dispatch('show-cart')">
+                                    <i class="bi bi-cart me-1"></i>
+                                    <span class="badge text-bg-danger" x-text="$store.books.totalQuantity()"></span>
+                                </span>
+
+                                <span class="mx-2"></span>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:if>
 
                     <button class="btn mt-1" @click="await $store.auth.logout()">
                         <i class="bi bi-box-arrow-right me-1"></i>
@@ -35,3 +58,5 @@
         </div>     
     </nav>
 </header>
+                    
+<div style="margin-bottom: 100px;"></div>

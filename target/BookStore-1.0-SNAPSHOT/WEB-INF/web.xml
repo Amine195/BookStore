@@ -12,6 +12,10 @@
         <servlet-name>AuthController</servlet-name>
         <servlet-class>bookstore.project.controller.AuthController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CartController</servlet-name>
+        <servlet-class>bookstore.project.controller.CartController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>BookController</servlet-name>
         <url-pattern>/book/*</url-pattern>
@@ -23,6 +27,10 @@
     <servlet-mapping>
         <servlet-name>AuthController</servlet-name>
         <url-pattern>/auth/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CartController</servlet-name>
+        <url-pattern>/cart/*</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

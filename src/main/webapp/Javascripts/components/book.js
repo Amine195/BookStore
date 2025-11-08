@@ -147,5 +147,13 @@ export default () => ({
 
     sendFilters: handleAsyncWrapperBook(async function () {
         await Alpine.store("books").loadBooks(this.filters);
-    }, "Erreur dans sendFilters")
+    }, "Erreur dans sendFilters"),
+    
+    showCart: function () {
+        this.selectedOption = "Cart";
+    },
+    
+    addBookToCart: handleAsyncWrapperBook(async function (id) {
+        await Alpine.store("books").addToCart(id);
+    })
 });

@@ -1,8 +1,6 @@
 <%@ include file="/Partials/header.jsp" %>
 
-<main x-data="login" class="container text-center mt-5">
-    <br>
-    
+<main x-data="login" class="container text-center">    
     <section>
         <form id="connexionForm" class="d-inline-block p-4 border rounded shadow-sm" @submit.prevent="submitForm" style="width: 400px;">
             <h5 class="fw-bold mb-3">Connexion</h5>

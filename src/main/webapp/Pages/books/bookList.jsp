@@ -1,6 +1,6 @@
 <%@ include file="/Partials/header.jsp" %>
 
-<main x-data="book" class="container mt-4">
+<main x-data="book" @show-cart.window="showCart()" class="container mt-4">
     <%@ include file="/Includes/breadcrumb.jsp" %>
         
     <section class="row">
@@ -78,7 +78,7 @@
             <h5 class="fw-bold ms-1 mb-3"><span x-text="selectedOption"></span> Book</h5>
             
             <template x-if="selectedOption === 'Details'">
-                <div>
+                <div class="sticky-top">
                     <template x-if="!bookId">
                         <p class="small"><span class="fw-bold text-primary me-2">|</span> Aucun produit selectionner.</p>
                     </template>
@@ -86,7 +86,17 @@
                         <%@ include file="/Includes/bookDetails.jsp" %>
                     </template>
                 </div>
-               
+            </template>
+                    
+            <template x-if="selectedOption === 'Cart'">
+                <div class="sticky-top">
+                    <template x-if="!$store.books.booksCart.length">
+                        <p class="small"><span class="fw-bold text-primary me-2">|</span> Aucun produit dans le panier.</p>
+                    </template>
+                    <template x-if="$store.books.booksCart.length">
+                        <%@ include file="/Includes/cartCard.jsp" %>
+                    </template>
+                </div>
             </template>
             
             <template x-if="selectedOption === 'New' || selectedOption === 'Edit'">
