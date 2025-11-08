@@ -7,11 +7,9 @@ import bookstore.project.dao.IBookDAO;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,20 +19,22 @@ public class CartController extends HttpServlet {
     private IBookDAO bookDAO;
     
     @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        this.bookDAO = new BookDAO();
+    public void init(ServletConfig config) {
+        try {
+            super.init(config);
+            this.bookDAO = new BookDAO();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         doPost(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         String action = request.getPathInfo();
         action = (action == null) ? "/load" : action;
         
@@ -84,7 +84,7 @@ public class CartController extends HttpServlet {
             // Envoyer la réponse JSON
             response.getWriter().write(json);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -196,18 +196,20 @@ public class CartController extends HttpServlet {
             // Envoyer la réponse JSON
             response.getWriter().write(json);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private String readRequestBody(HttpServletRequest request) throws IOException {
+    private String readRequestBody(HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader reader = request.getReader()) {
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return sb.toString();
     }

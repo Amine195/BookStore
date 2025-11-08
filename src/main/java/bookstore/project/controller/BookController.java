@@ -22,19 +22,22 @@ public class BookController extends HttpServlet {
     private IBookDAO bookDAO;
     
     @Override
-    public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        this.bookDAO = new BookDAO();
+    public void init(ServletConfig config) {
+        try {
+            super.init(config);
+            this.bookDAO = new BookDAO();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } 
     }
     
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         doPost(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         String action = request.getPathInfo();
         action = (action == null) ? "/list" : action;
         
@@ -69,13 +72,11 @@ public class BookController extends HttpServlet {
         }
     }
 
-    private void addNewBook(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    private void addNewBook(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
         
-        try
-        {          
+        try {          
             String body = readRequestBody(request);
             
             Gson gson = new Gson();
@@ -123,8 +124,7 @@ public class BookController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
         
-        try
-        {
+        try{
             String body = readRequestBody(request);
             
             Gson gson = new Gson();
@@ -193,13 +193,11 @@ public class BookController extends HttpServlet {
     }
 
     private void getAllBooks(HttpServletRequest request, HttpServletResponse response) {        
-        try
-        {
+        try {
             RequestDispatcher dispatcher = request.getRequestDispatcher("bookList.jsp");
             dispatcher.forward(request, response);
-        }
-        catch(ServletException | IOException e)
-        {
+            
+        } catch(ServletException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -248,8 +246,7 @@ public class BookController extends HttpServlet {
                 })
                 .collect(Collectors.toList());
             
-            response.getWriter().write(gson.toJson(filtered));
-            
+            response.getWriter().write(gson.toJson(filtered));            
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -277,14 +274,18 @@ public class BookController extends HttpServlet {
         }
     }
     
-    private String readRequestBody(HttpServletRequest request) throws IOException {
+    private String readRequestBody(HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
+        
         try (BufferedReader reader = request.getReader()) {
             String line;
             while ((line = reader.readLine()) != null) {
                 sb.append(line);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        
         return sb.toString();
     }
     

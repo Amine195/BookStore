@@ -8,10 +8,12 @@ import javax.servlet.http.HttpServletResponse;
 
 public class ProfileController extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
-        request.getRequestDispatcher("profile.jsp").forward(request, response); 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+        try { 
+            request.getRequestDispatcher("profile.jsp").forward(request, response); 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

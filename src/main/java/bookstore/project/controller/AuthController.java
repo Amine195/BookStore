@@ -3,16 +3,13 @@ package bookstore.project.controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.BufferedReader;
-import java.io.IOException;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class AuthController extends HttpServlet {
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) {
         String action = request.getPathInfo();
         
         switch(action) {
@@ -31,20 +28,16 @@ public class AuthController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         processRequest(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
         processRequest(request, response);
     }
     
-    private void login(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
+    private void login(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
@@ -81,21 +74,20 @@ public class AuthController extends HttpServlet {
         }   
     }
             
-    private void logout(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        
+    private void logout(HttpServletRequest request, HttpServletResponse response) {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
         
-        Gson gson = new Gson();
-        JsonObject jsonResponse = new JsonObject();
-        
         try {
             HttpSession session = request.getSession(false);
+            
+            Gson gson = new Gson();
+            JsonObject jsonResponse = new JsonObject();
 
             if (session != null) {
                 session.invalidate();
                 jsonResponse.addProperty("success", true);
+                
             } else {
                 jsonResponse.addProperty("success", false);
             }
