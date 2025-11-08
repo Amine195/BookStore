@@ -11,7 +11,7 @@ import {
 } from '../utils/notifications.js';
 
 export default () => ({
-    selectedOption: "Details",
+    selectedOption: "Cart",
     isLoading: true,
     
     ...createEmptyBook(),
@@ -151,9 +151,5 @@ export default () => ({
     
     showCart: function () {
         this.selectedOption = "Cart";
-    },
-    
-    addBookToCart: handleAsyncWrapperBook(async function (id) {
-        await Alpine.store("books").addToCart(id);
-    })
+    }   
 });

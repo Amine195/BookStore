@@ -33,25 +33,46 @@ export default {
         this.booksCart = await sendRequest(ROUTES.cartAdd, { id });
     },
     
-    totalQuantity() {
+    removeFromCart: async function (id) {
+        this.booksCart = await sendRequest(ROUTES.cartDelete, { id });
+    },
+    
+    handleAddToCart: async function(event, id) {
+        const button = event.currentTarget;
+        const rect = button.getBoundingClientRect();
+        
+        const floatNumber = document.createElement('div');
+        floatNumber.className = 'float-number';
+        floatNumber.textContent = '+1';
+        floatNumber.style.position = 'fixed';
+        floatNumber.style.left = `${rect.left + rect.width / 2 - 15}px`;
+        floatNumber.style.top = `${rect.top - 10}px`;
+        
+        document.body.appendChild(floatNumber);
+        
+        setTimeout(() => floatNumber.remove(), 1000);
+        await this.addToCart(id);
+    },
+       
+    get totalQuantity() {
         return this.booksCart.reduce((sum, item) => sum + item.quantity, 0);
     },
         
-    subtotal() {
+    get subtotal() {
         return this.booksCart.reduce((total, item) => {
             return total + (item.book.price * item.quantity);
         }, 0);
     },
 
-    tps() {
-        return this.subtotal() * 0.05;
+    get tps() {
+        return this.subtotal * 0.05;
     },
 
-    tvq() {
-        return this.subtotal() * 0.09975;
+    get tvq() {
+        return this.subtotal * 0.09975;
     },
 
-    total() {
-        return this.subtotal() + this.tps() + this.tvq();
+    get total() {
+        return this.subtotal + this.tps + this.tvq;
     }
 };

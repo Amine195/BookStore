@@ -32,7 +32,16 @@
                             <c:when test="${pageContext.request.servletPath == '/profile.jsp'}">                               
                                 <a class="nav-link d-flex align-items-center mt-1" href="cart.jsp">
                                     <i class="bi bi-cart me-1"></i>
-                                    <span class="badge text-bg-danger" x-text="$store.books.totalQuantity()"></span>
+                                    <span class="badge text-bg-danger" x-text="$store.books.totalQuantity"></span>
+                                </a>
+
+                                <span class="mx-2"></span>
+                            </c:when>
+                                
+                            <c:when test="${pageContext.request.servletPath == '/cart.jsp'}">                               
+                                <a class="nav-link d-flex align-items-center mt-1" href="#">
+                                    <i class="bi bi-cart me-1"></i>
+                                    <span class="badge text-bg-danger" x-text="$store.books.totalQuantity"></span>
                                 </a>
 
                                 <span class="mx-2"></span>
@@ -41,7 +50,7 @@
                             <c:otherwise>
                                 <span class="cursor-pointer d-inline-flex align-items-center mt-1" @click="$dispatch('show-cart')">
                                     <i class="bi bi-cart me-1"></i>
-                                    <span class="badge text-bg-danger" x-text="$store.books.totalQuantity()"></span>
+                                    <span class="badge text-bg-danger" x-text="$store.books.totalQuantity"></span>
                                 </span>
 
                                 <span class="mx-2"></span>

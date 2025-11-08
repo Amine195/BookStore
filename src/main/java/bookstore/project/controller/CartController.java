@@ -105,8 +105,7 @@ public class CartController extends HttpServlet {
             
             // Récupérer ou créer le panier
             List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
-            if (cart == null)
-                cart = new ArrayList<>();
+            if (cart == null) cart = new ArrayList<>();
             
             // Vérifier si l'article existe déjà
             boolean found = false;
@@ -139,7 +138,40 @@ public class CartController extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=UTF-8");
 
-        
+        try {
+            // Lire JSON envoyé par Alpine
+            String body = readRequestBody(request);
+            
+            Gson gson = new Gson();
+            JsonObject json = gson.fromJson(body, JsonObject.class);
+
+            int id = json.get("id").getAsInt();
+
+            // Récupérer la session
+            HttpSession session = request.getSession();
+
+            // Récupérer panier
+            List<CartItem> cart = (List<CartItem>) session.getAttribute("cart");
+
+            // Parcourir le panier et décrémenter la quantité
+            for (CartItem item : cart) {
+                if (item.getBook().getId() == id) {
+                    item.setQuantity(item.getQuantity() - 1);
+                    if (item.getQuantity() <= 0) cart.remove(item);
+                    break;
+                }
+            }
+
+            // Sauvegarder le panier modifié
+            session.setAttribute("cart", cart);
+
+            // Retourner panier mis à jour
+            String jsonResponse = gson.toJson(cart);
+            response.getWriter().write(jsonResponse);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     } 
 
     private String readRequestBody(HttpServletRequest request) throws IOException {
