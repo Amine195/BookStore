@@ -1,4 +1,4 @@
-<%@ include file="Partials/header.jsp" %>
+<%@ include file="/Partials/header.jsp" %>
 
 <main class="container text-center">
     <section class="small">
@@ -30,4 +30,4 @@
     </section>
 </main>
 
-<%@ include file="Partials/footer.jsp" %>
+<%@ include file="/Partials/footer.jsp" %>

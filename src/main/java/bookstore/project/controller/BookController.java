@@ -194,7 +194,7 @@ public class BookController extends HttpServlet {
 
     private void getAllBooks(HttpServletRequest request, HttpServletResponse response) {        
         try {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("bookList.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/bookList.jsp");
             dispatcher.forward(request, response);
             
         } catch(ServletException | IOException e) {

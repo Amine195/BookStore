@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,7 +31,12 @@ public class CartController extends HttpServlet {
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        doPost(request, response);
+        try {             
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/cart.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

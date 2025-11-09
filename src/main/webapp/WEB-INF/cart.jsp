@@ -1,4 +1,4 @@
-<%@ include file="Partials/header.jsp" %>
+<%@ include file="/Partials/header.jsp" %>
 
 <main x-data="cart" class="container">
     <h1 class="text-center mb-4"><i class="bi bi-bag-check text-success"></i></h1>
@@ -40,5 +40,5 @@
     </div>
 </main>
 
-<%@ include file="Partials/footer.jsp" %>
+<%@ include file="/Partials/footer.jsp" %>
 

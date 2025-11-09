@@ -28,8 +28,9 @@
 
                     <c:if test="${sessionScope.role == 'USER'}">
                         <c:choose>
-                            <c:when test="${pageContext.request.servletPath == '/profile.jsp'}">                               
-                                <a class="nav-link d-flex align-items-center mt-1" href="cart.jsp">
+                            <c:when test="${pageContext.request.servletPath == '/WEB-INF/profile.jsp'}">  
+                                
+                                <a class="nav-link d-flex align-items-center mt-1" href="/cart">
                                     <i class="bi bi-cart me-1"></i>
                                     <span class="badge text-bg-danger" x-text="$store.books.totalQuantity"></span>
                                 </a>
@@ -37,7 +38,7 @@
                                 <span class="mx-2"></span>
                             </c:when>
                                 
-                            <c:when test="${pageContext.request.servletPath == '/cart.jsp'}">                               
+                            <c:when test="${pageContext.request.servletPath == '/WEB-INF/cart.jsp'}">                               
                                 <a class="nav-link d-flex align-items-center mt-1" href="#">
                                     <i class="bi bi-cart me-1"></i>
                                     <span class="badge text-bg-danger" x-text="$store.books.totalQuantity"></span>

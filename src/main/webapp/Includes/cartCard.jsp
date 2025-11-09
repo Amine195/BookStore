@@ -48,12 +48,12 @@
             </div>
           
             <c:choose>
-                <c:when test="${pageContext.request.servletPath == '/cart.jsp'}">                               
+                <c:when test="${pageContext.request.servletPath == '/WEB-INF/cart.jsp'}">                               
                     <button class="btn btn-sm btn-success w-100" @click="processFinish()">Payement</button>
                 </c:when>
 
                 <c:otherwise>
-                    <a class="btn btn-sm btn-success w-100" href="cart.jsp">Cart details</a>
+                    <a class="btn btn-sm btn-success w-100" href="/cart">Cart details</a>
                 </c:otherwise>
             </c:choose>
         </div>        
