@@ -14,6 +14,10 @@ export default () => ({
     selectedOption: "Cart",
     isLoading: true,
     
+    isLoadingDetails: false,
+    isLoadingDetailsProgress: 0,
+    isLoadingDetailsProgressId: undefined,
+    
     ...createEmptyBook(),
     
     filters: {
@@ -65,7 +69,7 @@ export default () => ({
     
     init: handleAsyncWrapperBook(async function () {
         await Alpine.store("books").loadBooks(this.filters);
-        setTimeout(() => (this.isLoading = false), 1000);
+        setTimeout(() => (this.isLoading = false), 500);
     }, "Erreur lors de l'initialisation"),
 
     newBook: function() {
@@ -91,9 +95,30 @@ export default () => ({
     }, "Erreur dans addBook"),
 
     showBookDetails: handleAsyncWrapperBook(async function (id) {
+        if(this.selectedOption === "Details") {
+            const isLoadingDetailsProgressId = Date.now();
+            this.isLoadingDetailsProgressId = isLoadingDetailsProgressId;
+
+            this.isLoadingDetailsProgress = 0;
+            this.isLoadingDetails = true;
+
+            const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+            for (let p = 0; p <= 100; p++) {
+                if (this.isLoadingDetailsProgressId !== isLoadingDetailsProgressId) return;
+
+                this.isLoadingDetailsProgress = p;
+                await wait(10);
+            }
+            if (this.isLoadingDetailsProgressId !== isLoadingDetailsProgressId) return;
+            this.isLoadingDetails = false;
+        }
+           
         const response = await Alpine.store("books").selectBook(id);
         this.setBook(response);
         this.selectedOption = "Details";
+                
+        
     }, "Erreur dans showBookDetails"),
 
     editBook: handleAsyncWrapperBook(async function (id) {
@@ -146,7 +171,9 @@ export default () => ({
     }, "Erreur dans submitForm"),
 
     sendFilters: handleAsyncWrapperBook(async function () {
+        this.isLoading = true;
         await Alpine.store("books").loadBooks(this.filters);
+        setTimeout(() => (this.isLoading = false), 200);
     }, "Erreur dans sendFilters"),
     
     showCart: function () {

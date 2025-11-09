@@ -1,4 +1,5 @@
 <%@ include file="/Partials/header.jsp" %>
+<c:set var="pageName" value="Book" />
 
 <main x-data="book" @show-cart.window="showCart()" class="container mt-4">
     <%@ include file="/Includes/breadcrumb.jsp" %>

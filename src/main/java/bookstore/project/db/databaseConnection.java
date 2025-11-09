@@ -5,9 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    public static final String dbUrl = "jdbc:mysql://mysql-bded6365885.alwaysdata.net:3306/bded6365885_tpdevweb";
-    public static final String dbUserName = "426550_gzltmn";
-    public static final String dbPassword = "bdebanalyste";
+    private static final String dbUrl = "jdbc:mysql://mysql-bded6365885.alwaysdata.net:3306/bded6365885_tpdevweb";
+    private static final String dbUserName = "426550_gzltmn";
+    private static final String dbPassword = "bdebanalyste";
     
     private static DatabaseConnection instance;
     private Connection connection;

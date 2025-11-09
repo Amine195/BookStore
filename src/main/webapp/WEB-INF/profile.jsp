@@ -1,6 +1,9 @@
 <%@ include file="/Partials/header.jsp" %>
+<c:set var="pageName" value="Profile" />
 
 <main class="container text-center">
+    <%@ include file="/Includes/breadcrumb.jsp" %>
+    
     <section class="small">
         <p><i class="bi bi-person-circle h1 mb-5 text-muted"></i></p>
         <p class="mb-2">Session username: <code class="ms-2">${sessionScope.username}</code></p>
