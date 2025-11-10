@@ -18,6 +18,9 @@ export default () => ({
     isLoadingDetailsProgress: 0,
     isLoadingDetailsProgressId: undefined,
     
+    isLoadingCart: false,
+    isLoadingCartProgress: 0,
+    
     ...createEmptyBook(),
     
     filters: {
@@ -176,7 +179,22 @@ export default () => ({
         setTimeout(() => (this.isLoading = false), 200);
     }, "Erreur dans sendFilters"),
     
-    showCart: function () {
+    showCart: handleAsyncWrapperBook(async function () {
         this.selectedOption = "Cart";
-    }   
+        this.isLoadingCart = true;
+        
+        if(this.selectedOption === "Cart") {
+            this.isLoadingCartProgress = 0;
+            this.isLoadingCart = true;
+
+            const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+            for (let p = 0; p <= 100; p++) {
+                this.isLoadingCartProgress = p;
+                await wait(10);
+            }
+
+            this.isLoadingCart = false;
+        }
+    }, "Erreur dans showCart")
 });

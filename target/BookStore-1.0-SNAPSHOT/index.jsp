@@ -1,4 +1,5 @@
 <%@ include file="Partials/header.jsp" %>
+<c:set var="pageName" value="Index" />
 
 <main class="container">
     <section class="row">

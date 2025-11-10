@@ -1,4 +1,5 @@
 <%@ include file="/Partials/header.jsp" %>
+<c:set var="pageName" value="Login" />
 
 <main x-data="login" class="container text-center">    
     <section>

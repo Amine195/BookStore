@@ -1,4 +1,5 @@
 <%@ include file="Partials/header.jsp" %>
+<c:set var="pageName" value="Error_500" />
 
 <main class="container">
     <section class="row">

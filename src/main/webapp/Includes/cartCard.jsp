@@ -1,4 +1,12 @@
-<div class="card shadow-sm p-2 mb-5">
+<div class="card position-relative overflow-hidden shadow-sm p-2 mb-5">
+    
+    <c:if test="${pageName == 'Book'}">
+        <div x-show="isLoadingCart" class="progress position-absolute top-0 start-0 w-100" style="height: 4px; border-top-left-radius: .375rem; border-top-right-radius: .375rem;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                role="progressbar" :style="{ width: isLoadingCartProgress + '%' }"></div>
+        </div>  
+    </c:if>
+      
     <div class="card-body small">     
         <template x-for="item in $store.books.booksCart" :key="item.book.id">
             <div>

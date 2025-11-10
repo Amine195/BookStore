@@ -1,4 +1,5 @@
 <%@ include file="Partials/header.jsp" %>
+<c:set var="pageName" value="Error_404" />
 
 <main class="container">
     <h1 class="text-center mb-4"><i class="bi bi-sign-stop text-danger"></i></h1>

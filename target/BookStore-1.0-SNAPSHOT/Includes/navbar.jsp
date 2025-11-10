@@ -16,7 +16,12 @@
                             <a class="nav-link" aria-current="page" href="/book">
                                 <small>Books</small>
                             </a>
-                        </li>      
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/about.jsp">
+                                <small>About</small>
+                            </a>
+                        </li> 
                     </ul>
                     
                     <a class="nav-link d-flex align-items-center mt-1" href="/profile">

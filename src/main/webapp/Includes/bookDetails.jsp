@@ -1,10 +1,9 @@
 <div class="card position-relative overflow-hidden shadow-sm p-3 mb-5">
     
     <div x-show="isLoadingDetails" class="progress position-absolute top-0 start-0 w-100" style="height: 4px; border-top-left-radius: .375rem; border-top-right-radius: .375rem;">
-        <div class="progress-bar progress-bar-striped progress-bar-animated bg-secondary"
+        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
             role="progressbar" :style="{ width: isLoadingDetailsProgress + '%' }"></div>
     </div>
-    
     
     <div class="card-body small">
         <div class="row">
