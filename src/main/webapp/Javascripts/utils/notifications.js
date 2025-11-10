@@ -3,7 +3,7 @@ export const showSuccessNotification = (title, message) => {
         title,
         html: message,
         icon: "success",
-        confirmButtonColor: '#8EBE79'
+        confirmButtonColor: '#8EBE79',
     });
 };
 
@@ -17,8 +17,8 @@ export const showDeleteConfirmation = async () => {
     });
 
     return await swalWithBootstrapButtons.fire({
-        title: "Are you sure?",
-        text: "This action is irreversible.",
+        title: `<small>Are you sure?<small>`,
+        html: "<small>This action is irreversible.<small>",
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, delete it!",

@@ -8,7 +8,7 @@
     <div class="card-body small">
         <div class="row">
             <div class="col-6">
-                <label class="fw-semibold text-body-tertiary mb-1">Titre</label>
+                <label class="fw-semibold text-body-tertiary mb-1">Title</label>
                 <h6 class="card-title fw-bold mb-3" x-text="bookTitle"></h6>
             </div>
             <div class="col-6">

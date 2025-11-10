@@ -26,14 +26,14 @@
                     
                     <a class="nav-link d-flex align-items-center mt-1" href="/profile">
                         <i class="bi bi-person-circle me-1"></i>
-                        <span class="small">Bonjour ${sessionScope.username}</span>
+                        <span class="small">Welcome ${sessionScope.username}</span>
                     </a>
 
                     <span class="mx-3"></span>
 
                     <c:if test="${sessionScope.role == 'USER'}">
                         <c:choose>
-                            <c:when test="${pageContext.request.servletPath == '/WEB-INF/profile.jsp'}">  
+                            <c:when test="${pageContext.request.servletPath == '/WEB-INF/profile.jsp' || pageContext.request.servletPath == '/about.jsp'}">  
                                 
                                 <a class="nav-link d-flex align-items-center mt-1" href="/cart">
                                     <i class="bi bi-cart me-1"></i>

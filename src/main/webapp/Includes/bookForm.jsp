@@ -11,7 +11,7 @@
                 </div>  
             
                 <div class="mb-3 ">
-                    <label for="author" class="form-label small">Auteur</label>
+                    <label for="author" class="form-label small">Author</label>
                     <input type="text" class="form-control form-control-sm" id="author" x-model="bookAuthor">
                     <div class="text-danger small" x-show="errors.author">
                         <small x-text="errors.author"></small>
@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="publisher" class="form-label small">Éditeur</label>
+                    <label for="publisher" class="form-label small">Publisher</label>
                     <input type="text" class="form-control form-control-sm" id="publisher" x-model="bookPublisher">
                     <div class="text-danger small" x-show="errors.publisher">
                         <small x-text="errors.publisher"></small>
@@ -27,7 +27,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="publicationDate" class="form-label small">Date de publication</label>
+                    <label for="publicationDate" class="form-label small">Publication date</label>
                     <input type="date" class="form-control form-control-sm" id="publicationDate" x-model="bookPublicationDate">
                     <div class="text-danger small" x-show="errors.publicationDate">
                         <small x-text="errors.publicationDate"></small>
@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="language" class="form-label small">Langue</label>
+                    <label for="language" class="form-label small">Language</label>
                     <select class="form-select form-select-sm" id="language" x-model="bookLanguage">
                         <option value="" disabled>Select A Language</option>
                         <option>Anglais</option>
@@ -93,7 +93,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="price" class="form-label small">Prix</label>
+                    <label for="price" class="form-label small">Price</label>
                     <input type="number" step="0.01" class="form-control form-control-sm" id="price" x-model="bookPrice">
                     <div class="text-danger small" x-show="errors.price">
                         <small x-text="errors.price"></small>
@@ -109,7 +109,7 @@
                 </div>
             
                 <button type="submit" class="btn btn-outline-success btn-sm" type="submit">
-                    Enregistrer
+                    Save
                 </button>
             </div>
         </form>

@@ -8,57 +8,57 @@ export const validateBook = (book) => {
         {
             condition: !book.title || book.title.trim().length < 2,
             field: 'title',
-            message: "Le titre doit contenir au moins 2 caractères."
+            message: "The title must contain at least 2 characters."
         },
         {
             condition: !book.author || book.author.trim().length < 2,
             field: 'author',
-            message: "L'auteur doit contenir au moins 2 caractères."
+            message: "The author must contain at least 2 characters."
         },
         {
             condition: !book.publisher || book.publisher.trim().length < 2,
             field: 'publisher',
-            message: "L'éditeur est obligatoire."
+            message: "The editor is mandatory."
         },
         {
             condition: !book.publicationDate,
             field: 'publicationDate',
-            message: "La date de publication est obligatoire."
+            message: "The publication date is mandatory."
         },
         {
             condition: !book.category,
             field: 'category',
-            message: "Veuillez sélectionner une catégorie."
+            message: "Please select a category."
         },
         {
             condition: !book.language,
             field: 'language',
-            message: "Veuillez sélectionner une langue."
+            message: "Please select a language."
         },
         {
             condition: !book.pages || book.pages <= 0,
             field: 'pages',
-            message: "Le nombre de pages doit être supérieur à 0."
+            message: "The number of pages must be greater than 0."
         },
         {
             condition: !book.format,
             field: 'format',
-            message: "Veuillez sélectionner un format."
+            message: "Please select a format."
         },
         {
             condition: !book.stock || book.stock < 0,
             field: 'stock',
-            message: "Le stock doit être un nombre ≥ 0."
+            message: "The stock must be a number ≥ 0."
         },
         {
             condition: !book.price || book.price <= 0,
             field: 'price',
-            message: "Le prix doit être supérieur à 0."
+            message: "The price must be greater than 0."
         },
         {
             condition: !book.description || book.description.trim().length < 10,
             field: 'description',
-            message: "La description doit contenir au moins 10 caractères."
+            message: "The description must contain at least 10 characters."
         }
     ];
 

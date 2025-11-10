@@ -8,7 +8,7 @@
         
         <%-- FILTRES --%>
         <div class="col-2">
-            <h5 class="fw-bold mb-3">Filtres</h5>
+            <h5 class="fw-bold mb-3">Filters</h5>
             <form id="filtersForm" @change="sendFilters()">
                 <%@ include file="/Includes/filters/categories.jsp" %>
                 <%@ include file="/Includes/filters/formats.jsp" %>
@@ -35,7 +35,7 @@
                     <div class="spinner-border spinner-border-sm text-primary" role="status">
                         <span class="visually-hidden">Loading...</span>    
                     </div>
-                    <span class="fw-semibold text-body-tertiary small ms-1">Chargement des livres...</span>
+                    <span class="fw-semibold text-body-tertiary small ms-1">Loading books...</span>
                 </div>
             </template>
             
@@ -43,7 +43,7 @@
             <template x-if="!isLoading">
                 <div>                   
                     <template x-if="$store.books.booksList.length === 0">
-                        <p class="small"><span class="fw-bold text-primary me-2">|</span> Aucun produit dans la base de données.</p>
+                        <p class="small"><span class="fw-bold text-primary me-2">|</span> No books in the database.</p>
                     </template>
                  
                     <template x-if="$store.books.booksList.length > 0">
@@ -81,7 +81,7 @@
             <template x-if="selectedOption === 'Details'">
                 <div class="sticky-top">
                     <template x-if="!bookId">
-                        <p class="small"><span class="fw-bold text-primary me-2">|</span> Aucun produit selectionner.</p>
+                        <p class="small"><span class="fw-bold text-primary me-2">|</span> No book selected.</p>
                     </template>
                     <template x-if="bookId">
                         <%@ include file="/Includes/bookDetails.jsp" %>
@@ -92,7 +92,7 @@
             <template x-if="selectedOption === 'Cart'">
                 <div class="sticky-top">
                     <template x-if="!$store.books.booksCart.length">
-                        <p class="small"><span class="fw-bold text-primary me-2">|</span> Aucun produit dans le panier.</p>
+                        <p class="small"><span class="fw-bold text-primary me-2">|</span> No book in the cart.</p>
                     </template>
                     <template x-if="$store.books.booksCart.length">
                         <%@ include file="/Includes/cartCard.jsp" %>

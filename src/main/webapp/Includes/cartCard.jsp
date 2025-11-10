@@ -34,7 +34,7 @@
         
         <div>
             <div class="d-flex justify-content-between text-muted small">
-                <p class="mb-1">Sous-total : </p>
+                <p class="mb-1">Sub-total : </p>
                 <p class="mb-1"><span x-text="$store.books.subtotal.toFixed(2)"></span> CAD</p>
             </div>
             

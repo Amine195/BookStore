@@ -6,6 +6,9 @@ export default {
     booksCart: [],
     
     async init() {
+        const path = window.location.pathname;
+        if (path === "/" || path === "/connection") return;
+
         this.booksCart = await sendRequest(ROUTES.cartLoad);
     },
 

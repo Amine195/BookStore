@@ -4,7 +4,7 @@
 <main x-data="login" class="container text-center">    
     <section>
         <form id="connexionForm" class="d-inline-block p-4 border rounded shadow-sm" @submit.prevent="submitForm" style="width: 400px;">
-            <h5 class="fw-bold mb-3">Connexion</h5>
+            <h5 class="fw-bold mb-3">Sign in</h5>
             <h1 class="mb-3"><i class="bi bi-fingerprint"></i></h1>
             
             <template x-if="responseIsValid != null">
@@ -58,7 +58,7 @@
             </div>
             
             <template x-if="!isLoading">
-                <button type="submit" class="btn btn-sm btn-primary w-100">Se connecter</button>
+                <button type="submit" class="btn btn-sm btn-primary w-100">Login</button>
             </template>
             
             <template x-if="isLoading">

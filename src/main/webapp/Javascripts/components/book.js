@@ -89,8 +89,8 @@ export default () => ({
             await Alpine.store("books").loadBooks(this.filters);
             
             await showSuccessNotification(
-                "Add Book",
-                `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was added successfully`
+                `<small>Add Book<small>`,
+                `<small>The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was added successfully<small>`
             );
             
             this.resetBook();
@@ -139,8 +139,8 @@ export default () => ({
             await Alpine.store("books").loadBooks(this.filters);
 
             await showSuccessNotification(
-                "Update Book",
-                `The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was updated successfully`
+                `<small>Update Book<small>`,
+                `<small>The book <strong style="color:#8EBE79">${this.bookTitle}</strong> was updated successfully<small>`
             );
 
             this.selectedOption = "Details";
@@ -156,9 +156,11 @@ export default () => ({
             if (response) {
                 await Alpine.store("books").loadBooks(this.filters);
                 await showSuccessNotification(
-                    "Deleted!",
-                    "The book has been successfully deleted."
+                    `<small>Deleted!<small>`,
+                    `<small>The book has been successfully deleted.<small>`
                 );
+                this.resetBook();
+                this.selectedOption = "Details";
             }
         }    
     }, "Erreur dans deleteBook"),
@@ -179,10 +181,7 @@ export default () => ({
         setTimeout(() => (this.isLoading = false), 200);
     }, "Erreur dans sendFilters"),
     
-    showCart: handleAsyncWrapperBook(async function () {
-        this.selectedOption = "Cart";
-        this.isLoadingCart = true;
-        
+    showCart: handleAsyncWrapperBook(async function () {        
         if(this.selectedOption === "Cart") {
             this.isLoadingCartProgress = 0;
             this.isLoadingCart = true;
@@ -196,5 +195,7 @@ export default () => ({
 
             this.isLoadingCart = false;
         }
+        
+        this.selectedOption = "Cart";
     }, "Erreur dans showCart")
 });

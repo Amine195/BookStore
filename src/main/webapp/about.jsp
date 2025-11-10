@@ -52,7 +52,7 @@
                 <tr>
                     <th scope="row">8</th>
                     <td>Gestion d'erreurs (Exceptions).</td>
-                    <td class="text-nowrap"><i class="bi bi-check-circle-fill"></i></td>
+                    <td class="text-nowrap"><i class="bi bi-check-circle-fill text-success"></i></td>
                 </tr>
                 <tr>
                     <th scope="row">9</th>
@@ -86,8 +86,8 @@
                 </tr>
                 <tr>
                     <th scope="row">15</th>
-                    <td>L'application doit être internationalisée (au moins 2 langues au choix de l?utilisateur disponible sur les différentes pages).</td>
-                    <td class="text-nowrap"><i class="bi bi-check-circle-fill"></i></td>
+                    <td>L'application doit être internationalisée (au moins 2 langues au choix de l'utilisateur disponible sur les différentes pages).</td>
+                    <td class="text-nowrap"><i class="bi bi-x-circle-fill text-danger"></i></td>
                 </tr>
             </tbody>
         </table>

@@ -1,5 +1,5 @@
 <div class="mb-3">
-    <label class="fw-semibold text-body-tertiary mb-3">Catégories</label>
+    <label class="fw-semibold text-body-tertiary mb-3">Categories</label>
     <div class="small">
         <div class="form-check">
             <input class="form-check-input" type="checkbox" name="category" value="Conte" id="conte" x-model="filters.categories">

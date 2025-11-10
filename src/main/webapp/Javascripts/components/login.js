@@ -19,11 +19,11 @@ export default () => ({
         this.clearErrors();
 
         if (this.username.trim().length < 3) {
-            this.errors.username = "Le username doit contenir au moins 3 caractères.";
+            this.errors.username = "The username must contain at least 3 characters.";
         }
 
         if (this.password.trim().length < 4) {
-            this.errors.password = "Le mot de passe doit contenir au moins 4 caractères.";
+            this.errors.password = "The password must contain at least 4 characters.";
         }
 
         if (this.errors.username || this.errors.password) {

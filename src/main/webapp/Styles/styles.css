@@ -67,7 +67,6 @@ body {
     position: relative;
 }
 
-
 .loader::before {
     content: "";
     position: absolute;

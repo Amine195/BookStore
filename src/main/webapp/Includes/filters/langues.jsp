@@ -1,5 +1,5 @@
 <div class="mb-3">
-    <label class="fw-semibold text-body-tertiary mb-3">Langue</label>
+    <label class="fw-semibold text-body-tertiary mb-3">Language</label>
     <div class="small">
         <div class="form-check">
             <input class="form-check-input" type="checkbox" name="langue" value="Anglais" id="anglais" x-model="filters.langue">
